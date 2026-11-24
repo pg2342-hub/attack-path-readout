@@ -1,0 +1,212 @@
+{
+ "cases": [
+  {
+   "id": "P01",
+   "title": "Corporate VPN to the domain controller",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P01"
+   },
+   "expected": {
+    "fix_point": "vpn-gw-01",
+    "route": "human_review",
+    "fix_terms": [
+     "mitigat",
+     "patch",
+     "update",
+     "upgrade",
+     "discontinue"
+    ]
+   }
+  },
+  {
+   "id": "P02",
+   "title": "Field office VPN to the domain controller",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P02"
+   },
+   "expected": {
+    "fix_point": "vpn-gw-02",
+    "route": "human_review",
+    "fix_terms": [
+     "mitigat",
+     "patch",
+     "update",
+     "upgrade",
+     "discontinue"
+    ]
+   }
+  },
+  {
+   "id": "P03",
+   "title": "Contractor gateway to the email server",
+   "group": "standard",
+   "input": {
+    "path_id": "P03"
+   },
+   "expected": {
+    "fix_point": "nsg-01",
+    "route": "assign",
+    "fix_terms": [
+     "session"
+    ]
+   }
+  },
+  {
+   "id": "P04",
+   "title": "Plant edge firewall to the data historian",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P04"
+   },
+   "expected": {
+    "fix_point": "fw-edge-03",
+    "route": "human_review",
+    "fix_terms": [
+     "patch",
+     "update",
+     "upgrade",
+     "hotfix",
+     "threat prevention"
+    ]
+   }
+  },
+  {
+   "id": "P05",
+   "title": "Vendor file exchange data exposure",
+   "group": "standard",
+   "input": {
+    "path_id": "P05"
+   },
+   "expected": {
+    "fix_point": "mft-01",
+    "route": "assign",
+    "fix_terms": [
+     "patch",
+     "update",
+     "upgrade"
+    ]
+   }
+  },
+  {
+   "id": "P06",
+   "title": "Partner wiki takeover",
+   "group": "standard",
+   "input": {
+    "path_id": "P06"
+   },
+   "expected": {
+    "fix_point": "wiki-ext",
+    "route": "assign",
+    "fix_terms": [
+     "compromise"
+    ]
+   }
+  },
+  {
+   "id": "P07",
+   "title": "Remote support console to the virtualization cluster",
+   "group": "standard",
+   "input": {
+    "path_id": "P07"
+   },
+   "expected": {
+    "fix_point": "rmm-01",
+    "route": "assign",
+    "fix_terms": [
+     "mitigat",
+     "patch",
+     "update",
+     "upgrade",
+     "discontinue"
+    ]
+   }
+  },
+  {
+   "id": "P08",
+   "title": "Substation router to the EMS data link",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P08"
+   },
+   "expected": {
+    "fix_point": "rtr-sub-12",
+    "route": "human_review",
+    "fix_terms": [
+     "compromise"
+    ]
+   }
+  },
+  {
+   "id": "P09",
+   "title": "Outage map API remote code execution",
+   "group": "standard",
+   "input": {
+    "path_id": "P09"
+   },
+   "expected": {
+    "fix_point": "outage-api",
+    "route": "assign",
+    "fix_terms": [
+     "update",
+     "upgrade",
+     "patch"
+    ]
+   }
+  },
+  {
+   "id": "P10",
+   "title": "Firewall manager takeover from the corporate network",
+   "group": "standard",
+   "input": {
+    "path_id": "P10"
+   },
+   "expected": {
+    "fix_point": "fmgr-01",
+    "route": "assign",
+    "fix_terms": [
+     "mitigat",
+     "patch",
+     "update",
+     "upgrade",
+     "discontinue"
+    ]
+   }
+  },
+  {
+   "id": "P11",
+   "title": "Domain controller Netlogon from the corporate network",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P11"
+   },
+   "expected": {
+    "fix_point": "dc-01",
+    "route": "human_review",
+    "fix_terms": [
+     "patch",
+     "update",
+     "enforcement"
+    ]
+   }
+  },
+  {
+   "id": "P12",
+   "title": "Corporate network to the EMS data link through the OT jump host",
+   "group": "crown_jewel",
+   "input": {
+    "path_id": "P12"
+   },
+   "expected": {
+    "fix_point": "ot-jump-01",
+    "route": "human_review",
+    "fix_terms": [
+     "mfa",
+     "multi-factor",
+     "multifactor"
+    ]
+   }
+  }
+ ]
+}

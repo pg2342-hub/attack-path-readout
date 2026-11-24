@@ -1,0 +1,117 @@
+{
+ "note": "Answer key for the eval. The agent never sees this file. fix_point = the first step on the path, where one fix breaks the whole path. route = human_review for every path that ends at a crown-jewel asset. fix_terms = at least one must appear in the fix steps; they come from the KEV required action (or the misconfiguration) for the fix point.",
+ "cases": {
+  "P01": {
+   "fix_point": "vpn-gw-01",
+   "route": "human_review",
+   "fix_terms": [
+    "mitigat",
+    "patch",
+    "update",
+    "upgrade",
+    "discontinue"
+   ]
+  },
+  "P02": {
+   "fix_point": "vpn-gw-02",
+   "route": "human_review",
+   "fix_terms": [
+    "mitigat",
+    "patch",
+    "update",
+    "upgrade",
+    "discontinue"
+   ]
+  },
+  "P03": {
+   "fix_point": "nsg-01",
+   "route": "assign",
+   "fix_terms": [
+    "session"
+   ]
+  },
+  "P04": {
+   "fix_point": "fw-edge-03",
+   "route": "human_review",
+   "fix_terms": [
+    "patch",
+    "update",
+    "upgrade",
+    "hotfix",
+    "threat prevention"
+   ]
+  },
+  "P05": {
+   "fix_point": "mft-01",
+   "route": "assign",
+   "fix_terms": [
+    "patch",
+    "update",
+    "upgrade"
+   ]
+  },
+  "P06": {
+   "fix_point": "wiki-ext",
+   "route": "assign",
+   "fix_terms": [
+    "compromise"
+   ]
+  },
+  "P07": {
+   "fix_point": "rmm-01",
+   "route": "assign",
+   "fix_terms": [
+    "mitigat",
+    "patch",
+    "update",
+    "upgrade",
+    "discontinue"
+   ]
+  },
+  "P08": {
+   "fix_point": "rtr-sub-12",
+   "route": "human_review",
+   "fix_terms": [
+    "compromise"
+   ]
+  },
+  "P09": {
+   "fix_point": "outage-api",
+   "route": "assign",
+   "fix_terms": [
+    "update",
+    "upgrade",
+    "patch"
+   ]
+  },
+  "P10": {
+   "fix_point": "fmgr-01",
+   "route": "assign",
+   "fix_terms": [
+    "mitigat",
+    "patch",
+    "update",
+    "upgrade",
+    "discontinue"
+   ]
+  },
+  "P11": {
+   "fix_point": "dc-01",
+   "route": "human_review",
+   "fix_terms": [
+    "patch",
+    "update",
+    "enforcement"
+   ]
+  },
+  "P12": {
+   "fix_point": "ot-jump-01",
+   "route": "human_review",
+   "fix_terms": [
+    "mfa",
+    "multi-factor",
+    "multifactor"
+   ]
+  }
+ }
+}

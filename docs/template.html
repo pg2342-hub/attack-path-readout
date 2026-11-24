@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- demo-chrome --><meta name="theme-color" content="#f4f2ec"><link rel="icon" href="https://pranavgudise.dev/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="https://pranavgudise.dev/kit/demo.css"><!-- /demo-chrome -->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attack-Path Readout</title>
+<meta name="description" content="Validated attack paths at a synthetic electric utility turned into fix tickets for the owning teams by a Claude agent, retested, and rolled into a weekly readout for security leadership.">
+<style>
+.head h1{margin:40px 0 14px}
+.head .lead{max-width:41em}
+.board{margin:32px 0 0;border:1px solid var(--rule);border-radius:16px;background:#fbfaf6;overflow:hidden;scroll-margin-top:24px}
+.bar-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:16px 24px;border-bottom:1px solid var(--rule)}
+.seg{display:flex;width:fit-content;max-width:100%;gap:2px;padding:3px;border:1px solid var(--rule);border-radius:999px;background:var(--paper)}
+.seg button{min-height:38px;padding:0 18px;border:0;border-radius:999px;background:transparent;color:var(--ink-2);font:500 15px/1 var(--sans);cursor:pointer;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-checked=true]{background:var(--ink);color:var(--paper)}
+.cap{margin:0;color:var(--ink-2);font-size:15px}
+.vline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:22px 24px 6px}
+.vline h2{all:unset;display:block;font:400 34px/1.1 var(--serif)}
+.gate{justify-self:end;display:inline-flex;align-items:center;min-height:34px;padding:0 16px;border-radius:999px;font:500 13px/1 var(--mono);letter-spacing:.06em;white-space:nowrap}
+.gate.nogo{background:var(--ink);color:var(--paper)}
+.gate.go{background:var(--green-wash);color:var(--green)}
+.gate.part{border:1.5px dashed var(--ink);color:var(--ink)}
+.memo{grid-column:1/-1;margin:6px 0 0;font-size:17px;max-width:46em}
+.memo small{display:block;margin-top:8px;color:var(--ink-2);font:400 12.5px/1.4 var(--mono)}
+.tally{padding:18px 24px 22px}
+.counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.counts div{display:flex;flex-direction:column;gap:4px}
+.counts b{font:400 36px/1 var(--serif)}
+.counts span{color:var(--ink-2);font-size:14px;line-height:1.35}
+.groups{border-top:1px solid var(--rule);padding:6px 24px 22px}
+.grp h3{display:flex;align-items:baseline;gap:10px;margin:18px 0 10px;font:400 20px/1.2 var(--serif)}
+.grp h3 span{font:400 13px/1 var(--mono);color:var(--ink-2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:10px}
+button.tile{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:0 14px 12px;border:1px solid var(--rule);border-radius:12px;background:var(--paper);color:var(--ink);text-align:left;font:inherit;font-weight:400;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s var(--ease)}
+button.tile::before{content:"";display:block;height:5px;margin:0 -14px 4px}
+button.tile.s-closed::before{background:var(--green)}
+button.tile.s-open::before{background:var(--ink)}
+button.tile.s-retest::before{background:repeating-linear-gradient(90deg,var(--ink) 0 8px,transparent 8px 12px)}
+button.tile.s-pending::before{background:var(--rule)}
+button.tile:hover{border-color:var(--ink);transform:translateY(-2px)}
+button.tile[aria-expanded=true]{border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink)}
+button.tile.s-pending{opacity:.55}
+.tile .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tile .code{font:400 12.5px/1 var(--mono);color:var(--ink-2)}
+.tile .name{font:400 17px/1.25 var(--serif);min-height:2.5em}
+.tile .meta{margin-top:auto;font-size:13px;color:var(--ink-2);line-height:1.4}
+.badge{min-height:24px;padding:0 10px;font-size:11.5px}
+.badge.fixes{border-style:dashed}
+.detail{border-top:1px solid var(--rule);padding:18px 24px 22px;background:var(--paper)}
+.detail h3{margin:0 0 4px;font:400 22px/1.2 var(--serif)}
+.detail .hint{margin:0;color:var(--ink-2);font-size:15px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0 6px}
+.hop{border:1px solid var(--rule);border-radius:10px;padding:8px 10px;background:#fbfaf6;font-size:14px;line-height:1.35;max-width:15em}
+.hop b{display:block;font:500 12.5px/1.3 var(--mono)}
+.hop.crown{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.hop .tag{display:inline-block;margin-top:5px}
+.arrow{width:22px;height:12px;flex:none}
+.tk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:14px}
+.tk section{border:1px solid var(--rule);border-radius:12px;padding:14px 16px;background:#fbfaf6}
+.tk h4{margin:0 0 6px;font:500 13px/1.3 var(--sans)}
+.tk p,.tk ol,.tk ul{margin:0;font-size:15px}
+.tk ol,.tk ul{padding-left:20px}
+.tk .route{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;padding:12px 24px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:16px;height:6px;border-radius:2px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:56px;align-items:start}
+.content h2{scroll-margin-top:24px}
+.side{position:sticky;top:24px;margin-top:64px;display:grid;gap:22px;font-size:14px;color:var(--ink-2)}
+.side h3{margin:0 0 6px;font:500 13px/1.3 var(--sans);color:var(--ink)}
+.side p{margin:0}
+.side nav a{display:block;padding:5px 0;color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule-soft)}
+.side nav a:hover{color:var(--ink)}
+.side pre{font-size:12px;margin:6px 0 0;white-space:pre-wrap}
+.note{color:var(--ink-2);font-size:15px;max-width:44em;margin-top:14px}
+.tl{width:100%;height:auto;display:block;font-family:var(--sans)}
+.tl text{fill:var(--ink-2);font-size:12px;font-variant-numeric:tabular-nums}
+.tl .lab{fill:var(--ink);font:400 12px var(--mono)}
+.verdict{border:1px solid var(--rule);border-radius:16px;background:#fbfaf6;overflow:hidden}
+.vhead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;padding:16px 22px;border-bottom:1px solid var(--rule)}
+.vhead h3{margin:0;font:400 20px/1.2 var(--serif)}
+.vhead p{margin:0;color:var(--ink-2);font-size:14px}
+.vrow{display:grid;grid-template-columns:minmax(0,13em) minmax(0,1fr) 6.5em 6em;align-items:center;gap:18px;padding:18px 22px}
+.vrow+.vrow{border-top:1px solid var(--rule-soft)}
+.vwho b{display:block;font:400 18px/1.2 var(--serif)}
+.vwho span{display:block;color:var(--ink-2);font-size:13.5px;line-height:1.4;margin-top:4px}
+.strip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}
+.strip+.strip{margin-top:4px}
+.cell{display:block;aspect-ratio:1;border-radius:4px;border:1.5px solid transparent}
+.cell.pass{background:var(--green)}
+.cell.fail{background:var(--paper);border-color:var(--ink)}
+.cell.crit{background:var(--ink)}
+.vscore b{font:400 34px/1 var(--serif)}
+.vscore span{display:block;color:var(--ink-2);font-size:13px;line-height:1.35;margin-top:4px}
+.sq{display:flex;flex-wrap:wrap;gap:6px 18px;padding:12px 22px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:13px}
+.sq span{display:inline-flex;align-items:center;gap:8px}
+.sq i{width:12px;height:12px;border-radius:3px;border:1.5px solid transparent}
+.sq .pass{background:var(--green)}.sq .fail{border-color:var(--ink)}.sq .crit{background:var(--ink)}
+.teams{display:grid;gap:8px}
+.team{display:grid;grid-template-columns:minmax(0,12em) minmax(0,1fr) auto;gap:14px;align-items:center;border:1px solid var(--rule);border-radius:12px;padding:12px 16px;background:#fbfaf6}
+.team b{font:400 17px/1.2 var(--serif)}
+.team .bars{display:flex;gap:4px}
+.team .bars i{width:18px;height:18px;border-radius:4px}
+.team .bars .c{background:var(--green)}.team .bars .o{background:var(--ink)}
+.team span{color:var(--ink-2);font-size:14px;white-space:nowrap}
+.preview{border:1.5px dashed var(--ink);border-radius:12px;padding:10px 14px;margin:18px 0 0;font-size:15px}
+@media (max-width:1000px){
+ .layout{grid-template-columns:minmax(0,1fr);gap:0}
+ .side{position:static;margin-top:48px}
+ .vrow{grid-template-columns:minmax(0,1fr) auto;gap:12px 16px}
+ .vrow .strips{grid-column:1/-1;grid-row:2}
+ .vscore{grid-row:3}.vrow .gate{grid-row:3}
+}
+@media (max-width:700px){
+ .bar-top,.vline,.tally,.groups,.detail,.legend{padding-left:16px;padding-right:16px}
+ .vline h2{font-size:28px}
+ .memo{font-size:16px}
+ .counts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .counts b{font-size:30px}
+ .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ button.tile{padding:0 11px 10px}
+ button.tile::before{margin:0 -11px 2px}
+ .tile .name{font-size:15.5px}
+ .tile .top{flex-wrap:wrap}
+ .tk{grid-template-columns:1fr}
+ .team{grid-template-columns:minmax(0,1fr) auto}
+ .team .bars{grid-column:1/-1;grid-row:2;flex-wrap:wrap}
+ .vrow,.vhead,.sq{padding-left:16px;padding-right:16px}
+ .seg button{padding:0 14px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){button.tile{transition:none}}
+</style>
+</head>
+<body>
+<!-- demo-chrome --><header class="demo-top"><a class="demo-brand" href="https://pranavgudise.dev/"><svg class="demo-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><g class="n"><path class="f" d="M15.5 8.5 L 13.4 13.4 L 8.5 15.5 L 10.6 10.6 Z"/></g><circle class="p" cx="12" cy="12" r=".7"/></svg><span>Pranav Gudise</span></a><a class="pill" href="https://github.com/pg2342-hub/attack-path-readout">Code on GitHub</a></header><!-- /demo-chrome -->
+
+<main>
+<div class="head">
+<h1>Attack-path readout</h1>
+<p class="lead">An autonomous validation platform confirms which attack paths into a network actually work. This build takes each confirmed path at a made-up electric utility, has a Claude agent write the fix ticket for the team that can break it, holds anything that reaches a crown-jewel system for a person, tracks the retests, and rolls it all into the weekly readout for security leadership.</p>
+<div id="previewNote"></div>
+</div>
+
+<section class="board" id="board" aria-labelledby="verdict-h">
+  <div class="bar-top">
+    <div class="seg" role="radiogroup" aria-label="Which readout to show" id="viewSeg"></div>
+    <p class="cap" id="cap"></p>
+  </div>
+  <div class="vline" aria-live="polite">
+    <h2 id="verdict-h"></h2>
+    <span class="gate" id="gate"></span>
+    <p class="memo" id="memo"></p>
+  </div>
+  <div class="tally"><div class="counts" id="counts"></div></div>
+  <div class="groups" id="groups"></div>
+  <div class="detail" id="pathDetail" aria-live="polite"></div>
+  <div class="legend"><span><i style="background:var(--green)"></i>Closed, confirmed by a retest</span><span><i style="background:var(--ink)"></i>Open</span><span><i style="background:repeating-linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 8px)"></i>Fixed, but the retest found it still open</span><span><i style="background:var(--rule)"></i>Not validated yet</span></div>
+</section>
+
+<div class="layout">
+<div class="content">
+
+<h2 id="timeline">Time to close, path by path</h2>
+<div id="tl"></div>
+<p class="note" id="tlNote"></p>
+
+<h2 id="teams-h">Fix list by team</h2>
+<div class="teams" id="teams"></div>
+
+<h2 id="gate-h">Is the ticket writer ready to run on its own?</h2>
+<div id="gates"></div>
+<p class="note" id="costNote"></p>
+<details><summary>What each check tests</summary><div class="scroll"><table id="checks"><thead><tr><th>Check</th><th>Critical</th></tr></thead><tbody></tbody></table></div></details>
+</div>
+
+<aside class="side" aria-label="About this build">
+  <nav aria-label="On this page"><a href="#board">Weekly readout</a><a href="#timeline">Time to close</a><a href="#teams-h">Fix list by team</a><a href="#gate-h">Ticket writer gate</a></nav>
+  <div><h3>Data</h3><p id="dataNote"></p></div>
+  <div><h3>Run it yourself</h3><p>Python 3.10 or later. Tests and the rules-only baseline need no key; the agent needs ANTHROPIC_API_KEY.</p><pre>python3 -m unittest
+python3 -m readout.run --agent template --out runs/template
+python3 -m readout.run --agent claude --out runs/mine</pre></div>
+  <div><a class="pill" href="https://github.com/pg2342-hub/attack-path-readout">Code on GitHub</a></div>
+</aside>
+</div>
+</main>
+<script>
+const D = /*DATA*/null;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plural = (n,w,ws) => `${n} ${n==1?w:(ws||w+"s")}`;
+const VIEWS = Object.keys(D.views);
+let view = VIEWS[VIEWS.length-1], sel = null;
+const P = Object.fromEntries(D.paths.map(p=>[p.id,p]));
+const S = {closed:{cls:"s-closed",badge:'<span class="badge go">CLOSED</span>'},
+           open:{cls:"s-open",badge:'<span class="badge no-go">OPEN</span>'},
+           fixed_awaiting_retest:{cls:"s-open",badge:'<span class="badge fixes">AWAITING RETEST</span>'},
+           fix_failed_retest:{cls:"s-retest",badge:'<span class="badge fixes">RETEST FAILED</span>'},
+           pending:{cls:"s-pending",badge:'<span class="badge">NOT YET</span>'}};
+if (D.preview) document.getElementById("previewNote").innerHTML = '<p class="preview">Layout preview with rules-only tickets. The recorded Claude run replaces this.</p>';
+const segEl = document.getElementById("viewSeg");
+segEl.innerHTML = VIEWS.map(v=>`<button type="button" role="radio" data-v="${v}">${esc(D.views[v].label)}</button>`).join("");
+const seg = [...segEl.querySelectorAll("button")];
+function show(v){view=v; seg.forEach(b=>{const on=b.dataset.v==v; b.setAttribute("aria-checked",String(on)); b.tabIndex=on?0:-1;}); render();}
+seg.forEach((b,i)=>{b.addEventListener("click",()=>show(b.dataset.v));
+  b.addEventListener("keydown",e=>{if(!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key))return;e.preventDefault();const n=seg[(i+1)%seg.length];show(n.dataset.v);n.focus();});});
+
+function render(){
+  const V = D.views[view], M = V.metrics, rows = Object.fromEntries(M.rows.map(r=>[r.id,r]));
+  document.getElementById("cap").textContent = `Day ${V.day} of a four-week pilot. ${view=="week1"?"Internet-facing assets only so far.":"Corporate network added from day 14."}`;
+  document.getElementById("verdict-h").textContent = `${M.closed} of ${M.validated} paths closed`;
+  const g = document.getElementById("gate");
+  if (M.open_to_crown_jewels){g.className="gate nogo"; g.textContent=`${M.open_to_crown_jewels} OPEN TO CROWN JEWELS`;}
+  else {g.className="gate go"; g.textContent="NONE OPEN TO CROWN JEWELS";}
+  document.getElementById("memo").innerHTML = `${esc(V.summary)}<small>${V.summary_by=="claude"?"Weekly summary written by Claude from these numbers; a rule checks every number against the metrics.":"Summary built from the metrics by rule."}</small>`;
+  const med = M.median_days_to_close;
+  document.getElementById("counts").innerHTML = [
+    [M.validated,"paths validated"],[M.closed,"closed and confirmed by a retest"],[M.open,"still open"],
+    [med==null?"none":med,"median days from validation to confirmed close"]].map(c=>`<div><b>${c[0]}</b><span>${c[1]}</span></div>`).join("");
+  const groups = [["external","Internet-facing entry points"],["internal","Corporate network (from day 14)"]];
+  document.getElementById("groups").innerHTML = groups.map(([ph,name])=>{
+    const ps = D.paths.filter(p=>p.phase==ph);
+    return `<div class="grp"><h3>${name} <span>${plural(ps.length,"path")}</span></h3><div class="tiles">${ps.map(p=>{
+      const r = rows[p.id], st = r? r.status : "pending", s = S[st];
+      const meta = !r ? `Validated on day ${p.timeline.validated}` : r.status=="closed" ? `Closed in ${r.days_to_close} days. ${esc(r.owner_team)}` : `Open ${r.days_open} days. ${esc(r.owner_team)}`;
+      return `<button type="button" class="tile ${s.cls}" data-p="${p.id}" aria-expanded="${sel==p.id}" aria-controls="pathDetail">
+        <span class="top"><span class="code">${p.id}</span>${s.badge}</span><span class="name">${esc(p.title)}</span><span class="meta">${meta}</span></button>`;}).join("")}</div></div>`;}).join("");
+  document.querySelectorAll("button.tile").forEach(b=>b.addEventListener("click",()=>{sel = sel==b.dataset.p?null:b.dataset.p; render(); const n=document.querySelector(`button.tile[data-p="${b.dataset.p}"]`); n&&n.focus();}));
+  detail(rows);
+}
+const ARROW = '<svg class="arrow" viewBox="0 0 22 12" aria-hidden="true"><path d="M1 6h17M14 1.5 19 6l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+function detail(rows){
+  const el = document.getElementById("pathDetail");
+  if(!sel){el.innerHTML = '<p class="hint">Select a path to see each step, the evidence, and the ticket the agent wrote for it.</p>'; return;}
+  const p = P[sel], t = p.ticket, r = rows[sel];
+  const hops = p.steps.map(s=>`<div class="hop${s.crown?" crown":""}"><b>${esc(s.asset)}</b>${esc(s.name)}<br>${s.cve?`<span class="tag">${esc(s.cve)}</span>`:`<span style="color:var(--ink-2)">${esc(s.misconfig)}</span>`}</div>`).join(ARROW);
+  const route = t.final_route=="human_review" ? '<span class="badge fixes">HELD FOR A PERSON</span>' : '<span class="badge go">ASSIGNED</span>';
+  const why = t.final_route=="human_review" ? esc(t.guardrail_problems && t.guardrail_problems.length ? t.guardrail_problems.join("; ") : t.route_reason) : "";
+  const retests = (p.timeline.retests||[]).map(([d,res])=>`Day ${d}: ${res}${p.retest_notes[d]?". "+esc(p.retest_notes[d]):""}`).join("<br>");
+  el.innerHTML = `<h3>${esc(p.title)} <span class="code" style="font:400 14px var(--mono);color:var(--ink-2)">${p.id}</span></h3>
+   <p class="hint">${esc(p.evidence)}</p>
+   <div class="chain">${hops}</div>
+   <div class="tk">
+    <section><h4>Ticket for ${esc(t.owner_team)}</h4><div class="route">${route}${p.issue?` <a href="${esc(p.issue)}">Open the issue</a>`:""}</div>
+      <p><b>${esc(t.title)}</b></p><p style="margin-top:6px">${esc(t.summary)}</p><p style="margin-top:6px;color:var(--ink-2)">${esc(t.why_it_matters)}</p>${why?`<p style="margin-top:6px;color:var(--ink-2)">Why held: ${why}</p>`:""}</section>
+    <section><h4>Fix steps</h4><ol>${(t.fix_steps||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+      <h4 style="margin-top:10px">Verify</h4><ul>${(t.verify_steps||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      <h4 style="margin-top:10px">Retests</h4><p>${retests || (p.hold_note?esc(p.hold_note):"None yet.")}</p></section>
+   </div>`;
+}
+
+function timeline(){
+  const W=760, row=26, top=34, left=58, right=16, H=top+D.paths.length*row+16, days=28, x=d=>left+(W-left-right)*d/days;
+  let s=`<svg class="tl" viewBox="0 0 ${W} ${H}" role="img" aria-label="Days from validation to confirmed close for each path over the 28-day pilot">`;
+  for(let d=0; d<=days; d+=7){s+=`<line x1="${x(d)}" x2="${x(d)}" y1="${top-8}" y2="${H-10}" stroke="var(--rule-soft)"/><text x="${x(d)}" y="${top-14}" text-anchor="middle">day ${d}</text>`;}
+  s+=`<line x1="${x(14)}" x2="${x(14)}" y1="${top-8}" y2="${H-10}" stroke="var(--ink)" stroke-dasharray="3 3"/>`;
+  D.paths.forEach((p,i)=>{
+    const y=top+i*row, t=p.timeline, closed=(t.retests||[]).filter(r=>r[1]=="closed").map(r=>r[0])[0];
+    const end = closed ?? days;
+    s+=`<text class="lab" x="0" y="${y+13}">${p.id}</text>`;
+    s+=`<rect x="${x(t.validated)}" y="${y+3}" width="${Math.max(x(end)-x(t.validated),2)}" height="14" rx="3" fill="${closed?"var(--green)":"var(--ink)"}"/>`;
+    (t.retests||[]).filter(r=>r[1]=="open").forEach(r=>{s+=`<rect x="${x(r[0])-4}" y="${y}" width="8" height="20" rx="2" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/>`;});
+    s+= closed ? `<text x="${x(end)+6}" y="${y+14}">${closed-t.validated} days</text>` : `<text x="${x(end)-6}" y="${y+14}" text-anchor="end" style="fill:var(--paper)">open on day ${days}</text>`;
+  });
+  s+="</svg>";
+  document.getElementById("tl").innerHTML=s;
+  document.getElementById("tlNote").textContent="Each bar runs from the day the platform validated the path to the day a retest confirmed it closed. The dashed line is day 14, when scope widened to the corporate network. A white marker is a retest that found the path still open.";
+}
+function teams(){
+  const M=D.views[VIEWS[VIEWS.length-1]].metrics, g={};
+  M.rows.forEach(r=>{(g[r.owner_team]=g[r.owner_team]||[]).push(r)});
+  const order=Object.keys(g).sort((a,b)=>g[b].filter(r=>r.status!="closed").length-g[a].filter(r=>r.status!="closed").length||g[b].length-g[a].length);
+  document.getElementById("teams").innerHTML=order.map(k=>{const rs=g[k], o=rs.filter(r=>r.status!="closed").length;
+    return `<div class="team"><b>${esc(k)}</b><div class="bars" aria-hidden="true">${rs.map(r=>`<i class="${r.status=="closed"?"c":"o"}" title="${r.id}"></i>`).join("")}</div><span>${rs.length-o} closed${o?`, ${o} open`:""}</span></div>`;}).join("");
+}
+function gates(){
+  const G=D.gates, rows=[["live","Claude ticket agent","The recorded live run"],["template","Rules-only baseline","Copies the KEV required action into a fixed template"],["naive","Naive router (control)","Sends each ticket to the target's owner and assigns all of them"]];
+  const any = rows.some(r=>G[r[0]]);
+  if(!any){document.getElementById("gates").innerHTML='<p class="note">Gate results appear after the first recorded run.</p>';return;}
+  const label={"go":["gate go","GO"],"no-go":["gate nogo","NO-GO"],"partial":["gate part","PARTIAL"]};
+  let h=`<div class="verdict"><div class="vhead"><h3>Same 12 paths, same checks</h3><p>Gate: <b>all 12 tickets pass on every run, no critical failures</b></p></div>`;
+  rows.forEach(([k,name,sub])=>{const g=G[k]; if(!g) return;
+    const byRun={}; g.cells.forEach(c=>{(byRun[c.run]=byRun[c.run]||[]).push(c)});
+    const strips=Object.keys(byRun).map(r=>`<div class="strip" role="group" aria-label="${esc(name)} run ${r}">${byRun[r].map(c=>`<span class="cell ${c.critical?"crit":c.passed?"pass":"fail"}" title="${c.case} run ${c.run}${c.failed.length?": "+c.failed.join(", "):""}"></span>`).join("")}</div>`).join("");
+    const passed=g.cells.filter(c=>c.passed).length, crit=g.cells.filter(c=>c.critical).length;
+    h+=`<div class="vrow"><div class="vwho"><b>${name}</b><span>${sub}${g.runs>1?`, ${g.runs} runs`:""}</span></div><div class="strips">${strips}</div><div class="vscore"><b>${passed}</b><span>of ${g.cells.length} passed<br>${plural(crit,"critical")}</span></div><span class="${label[g.decision][0]}">${label[g.decision][1]}</span></div>`;});
+  h+=`<div class="sq"><span><i class="pass"></i>Passed every check</span><span><i class="fail"></i>Failed a check</span><span><i class="crit"></i>Failed a critical check</span><span>Each square is one path on one run. Hover for the failed checks.</span></div></div>`;
+  document.getElementById("gates").innerHTML=h;
+  const ref = G.live||G.template||G.naive;
+  document.querySelector("#checks tbody").innerHTML=ref.checks.map(c=>`<tr><td>${esc(c.text||c.id)}</td><td>${c.critical?"Yes":"No"}</td></tr>`).join("");
+  const C=D.cost; document.getElementById("costNote").textContent = C.tickets ? `The live run used ${C.model} and wrote ${C.tickets} tickets per run for ${C.usd.toFixed(2)} USD in total for run 1, about ${C.mean_latency_s} seconds each. The checks grade each ticket as the agent wrote it, before the guardrails step in, so the safety net never hides a bad call.` : "";
+}
+document.getElementById("dataNote").textContent = `The utility, its assets, owners, attack paths, evidence and timeline are made up. CVE details come from the public CISA Known Exploited Vulnerabilities catalog (version ${D.kev.catalogVersion}) and exploit likelihood from FIRST EPSS. No real network was tested.`;
+timeline(); teams(); gates(); show(view);
+</script>
+<!-- demo-chrome --><footer class="demo-foot"><span>A working build by <a href="https://pranavgudise.dev/">Pranav Gudise</a>. Synthetic or public data only.</span><a href="https://github.com/pg2342-hub/attack-path-readout">github.com/pg2342-hub/attack-path-readout</a></footer><!-- /demo-chrome -->
+</body>
+</html>

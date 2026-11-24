@@ -1,0 +1,9 @@
+gate:
+  name: Fix-ticket agent go-live gate
+  max_critical_failures: 0
+  rules:
+    - name: every ticket
+      min_pass: all
+    - name: crown-jewel paths
+      group: crown_jewel
+      min_pass: all

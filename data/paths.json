@@ -1,0 +1,403 @@
+{
+ "estate": "A large US electric utility (synthetic)",
+ "pilot": {
+  "start": "day 1",
+  "readouts": [
+   {
+    "id": "week1",
+    "day": 7,
+    "label": "Week 1 readout"
+   },
+   {
+    "id": "week4",
+    "day": 28,
+    "label": "Week 4 readout"
+   }
+  ],
+  "scope": {
+   "external": "Days 1 to 13: internet-facing assets only, a person approves each step past the first",
+   "internal": "From day 14: corporate network added under the same rules of engagement"
+  }
+ },
+ "paths": [
+  {
+   "id": "P01",
+   "title": "Corporate VPN to the domain controller",
+   "phase": "external",
+   "target": "dc-01",
+   "steps": [
+    {
+     "asset": "vpn-gw-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2023-46805"
+    },
+    {
+     "asset": "vpn-gw-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2024-21887"
+    },
+    {
+     "asset": "jump-it-01",
+     "technique": "T1078",
+     "technique_name": "Valid Accounts",
+     "misconfig": "Admin credentials cached on the VPN appliance also work on the IT jump host"
+    },
+    {
+     "asset": "dc-01",
+     "technique": "T1021.001",
+     "technique_name": "Remote Services: RDP",
+     "misconfig": "Jump host admin group has RDP rights on the domain controller"
+    }
+   ],
+   "evidence": "Validation agent reached an authenticated shell on the VPN appliance, then logged on to the jump host and opened an RDP session to the domain controller with read-only rights under the rules of engagement.",
+   "timeline": {
+    "validated": 3,
+    "acknowledged": 4,
+    "fixed": 9,
+    "retests": [
+     [
+      10,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P02",
+   "title": "Field office VPN to the domain controller",
+   "phase": "external",
+   "target": "dc-01",
+   "steps": [
+    {
+     "asset": "vpn-gw-02",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2024-21762"
+    },
+    {
+     "asset": "fs-02",
+     "technique": "T1068",
+     "technique_name": "Exploitation for Privilege Escalation",
+     "cve": "CVE-2021-34527"
+    },
+    {
+     "asset": "dc-01",
+     "technique": "T1003",
+     "technique_name": "OS Credential Dumping",
+     "misconfig": "File server holds a cached domain admin logon"
+    }
+   ],
+   "evidence": "Out-of-bounds write on the SSL-VPN gave a foothold; the print spooler flaw on the file server gave SYSTEM, where a cached domain admin logon was present.",
+   "timeline": {
+    "validated": 3,
+    "acknowledged": 4,
+    "fixed": 12,
+    "retests": [
+     [
+      13,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P03",
+   "title": "Contractor gateway to the email server",
+   "phase": "external",
+   "target": "exch-01",
+   "steps": [
+    {
+     "asset": "nsg-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2023-4966"
+    },
+    {
+     "asset": "exch-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2022-41040"
+    }
+   ],
+   "evidence": "Session tokens leaked by the gateway allowed a contractor session to be taken over; from there the email server answered the server-side request forgery check.",
+   "timeline": {
+    "validated": 4,
+    "acknowledged": 5,
+    "fixed": 8,
+    "retests": [
+     [
+      9,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P04",
+   "title": "Plant edge firewall to the data historian",
+   "phase": "external",
+   "target": "hist-01",
+   "steps": [
+    {
+     "asset": "fw-edge-03",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2024-3400"
+    },
+    {
+     "asset": "ot-jump-01",
+     "technique": "T1078.003",
+     "technique_name": "Valid Accounts: Local Accounts",
+     "misconfig": "The OT jump host shares its local admin password with the firewall's management account"
+    },
+    {
+     "asset": "hist-01",
+     "technique": "T1021",
+     "technique_name": "Remote Services",
+     "misconfig": "Historian accepts logons from the OT jump host"
+    }
+   ],
+   "evidence": "Command injection on the GlobalProtect portal was confirmed; the reused local admin password opened the OT jump host, which can log on to the historian. No commands were sent to the historian.",
+   "timeline": {
+    "validated": 5,
+    "acknowledged": 6,
+    "fixed": 11,
+    "retests": [
+     [
+      12,
+      "open"
+     ],
+     [
+      25,
+      "closed"
+     ]
+    ]
+   },
+   "retest_notes": {
+    "12": "Patched on the primary interface; the GlobalProtect portal on the secondary interface was still on the old version."
+   }
+  },
+  {
+   "id": "P05",
+   "title": "Vendor file exchange data exposure",
+   "phase": "external",
+   "target": "mft-01",
+   "steps": [
+    {
+     "asset": "mft-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2023-34362"
+    }
+   ],
+   "evidence": "SQL injection in the file transfer web app was confirmed with a read of the version table only.",
+   "timeline": {
+    "validated": 2,
+    "acknowledged": 3,
+    "fixed": 6,
+    "retests": [
+     [
+      7,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P06",
+   "title": "Partner wiki takeover",
+   "phase": "external",
+   "target": "wiki-ext",
+   "steps": [
+    {
+     "asset": "wiki-ext",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2023-22515"
+    }
+   ],
+   "evidence": "The setup endpoint that allows creating an administrator account was reachable from the internet; the agent stopped before creating an account.",
+   "timeline": {
+    "validated": 4,
+    "acknowledged": 8,
+    "fixed": 15,
+    "retests": [
+     [
+      16,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P07",
+   "title": "Remote support console to the virtualization cluster",
+   "phase": "external",
+   "target": "esxi-07",
+   "steps": [
+    {
+     "asset": "rmm-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2024-1709"
+    },
+    {
+     "asset": "esxi-07",
+     "technique": "T1068",
+     "technique_name": "Exploitation for Privilege Escalation",
+     "cve": "CVE-2024-37085"
+    }
+   ],
+   "evidence": "The remote support setup wizard was reachable without authentication; hypervisor hosts trust a directory group the support console can create.",
+   "timeline": {
+    "validated": 5,
+    "acknowledged": 6,
+    "fixed": 10,
+    "retests": [
+     [
+      11,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P08",
+   "title": "Substation router to the EMS data link",
+   "phase": "external",
+   "target": "ems-link-01",
+   "steps": [
+    {
+     "asset": "rtr-sub-12",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2023-20198"
+    },
+    {
+     "asset": "ems-link-01",
+     "technique": "T1599",
+     "technique_name": "Network Boundary Bridging",
+     "misconfig": "No access list between the substation comms network and the EMS data link"
+    }
+   ],
+   "evidence": "The router's web UI is reachable from the internet and on an affected version; a route to the EMS data link exists with no access list. No traffic was sent to the EMS link.",
+   "timeline": {
+    "validated": 6,
+    "acknowledged": 7,
+    "fixed": null,
+    "retests": [],
+    "scheduled_fix": 35
+   },
+   "hold_note": "Router upgrade needs an OT change window, scheduled for day 35."
+  },
+  {
+   "id": "P09",
+   "title": "Outage map API remote code execution",
+   "phase": "external",
+   "target": "outage-api",
+   "steps": [
+    {
+     "asset": "outage-api",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2021-44228"
+    }
+   ],
+   "evidence": "A harmless lookup string in a request header triggered an outbound DNS query from the outage map API.",
+   "timeline": {
+    "validated": 2,
+    "acknowledged": 3,
+    "fixed": 5,
+    "retests": [
+     [
+      6,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P10",
+   "title": "Firewall manager takeover from the corporate network",
+   "phase": "internal",
+   "target": "fmgr-01",
+   "steps": [
+    {
+     "asset": "fmgr-01",
+     "technique": "T1190",
+     "technique_name": "Exploit Public-Facing Application",
+     "cve": "CVE-2024-47575"
+    }
+   ],
+   "evidence": "The firewall manager's device registration port answered from the corporate user network on an affected version.",
+   "timeline": {
+    "validated": 16,
+    "acknowledged": 17,
+    "fixed": 21,
+    "retests": [
+     [
+      22,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P11",
+   "title": "Domain controller Netlogon from the corporate network",
+   "phase": "internal",
+   "target": "dc-01",
+   "steps": [
+    {
+     "asset": "dc-01",
+     "technique": "T1210",
+     "technique_name": "Exploitation of Remote Services",
+     "cve": "CVE-2020-1472"
+    }
+   ],
+   "evidence": "The domain controller accepted a vulnerable Netlogon secure channel from a corporate workstation; the agent stopped before changing any password.",
+   "timeline": {
+    "validated": 15,
+    "acknowledged": 15,
+    "fixed": 18,
+    "retests": [
+     [
+      19,
+      "closed"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "P12",
+   "title": "Corporate network to the EMS data link through the OT jump host",
+   "phase": "internal",
+   "target": "ems-link-01",
+   "steps": [
+    {
+     "asset": "ot-jump-01",
+     "technique": "T1021.001",
+     "technique_name": "Remote Services: RDP",
+     "misconfig": "OT jump host accepts RDP from the whole corporate network with no multi-factor prompt"
+    },
+    {
+     "asset": "ems-link-01",
+     "technique": "T1078",
+     "technique_name": "Valid Accounts",
+     "misconfig": "EMS data link trusts logons from the OT jump host"
+    }
+   ],
+   "evidence": "An RDP logon prompt on the OT jump host was reachable from a corporate desktop VLAN with password-only sign-in. The agent did not attempt a logon.",
+   "timeline": {
+    "validated": 17,
+    "acknowledged": 18,
+    "fixed": null,
+    "retests": [],
+    "scheduled_fix": 35
+   },
+   "hold_note": "Restricting RDP and adding MFA on the OT jump host needs an OT change window, scheduled for day 35."
+  }
+ ]
+}

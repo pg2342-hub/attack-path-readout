@@ -1,0 +1,19 @@
+asset_id,name,kind,product,zone,owner_team,crown_jewel
+vpn-gw-01,Remote access VPN (corporate),vpn_gateway,Ivanti Connect Secure,internet,Network Engineering,no
+vpn-gw-02,Remote access VPN (field offices),vpn_gateway,Fortinet FortiOS SSL-VPN,internet,Network Engineering,no
+nsg-01,Contractor gateway,vpn_gateway,Citrix NetScaler Gateway,internet,Network Engineering,no
+fw-edge-03,Plant edge firewall with GlobalProtect,firewall,Palo Alto Networks PAN-OS,internet,Network Engineering,no
+mft-01,Vendor file exchange,file_transfer,Progress MOVEit Transfer,internet,Enterprise Applications,no
+wiki-ext,Partner wiki,web_app,Atlassian Confluence Data Center,internet,Collaboration Tools,no
+rmm-01,Remote support console,remote_support,ConnectWise ScreenConnect,internet,IT Service Desk,no
+rtr-sub-12,Substation comms router,router,Cisco IOS XE,internet,Field Telecom,no
+outage-api,Outage map API,web_app,Java service using Apache Log4j2,internet,Customer Applications,no
+exch-01,Email server,mail_server,Microsoft Exchange Server,corporate,Messaging,no
+fs-02,File and print server,server,Microsoft Windows Server,corporate,Windows Server,no
+jump-it-01,IT admin jump host,jump_host,Microsoft Windows Server,corporate,Windows Server,no
+esxi-07,Virtualization cluster,hypervisor,VMware ESXi,corporate,Infrastructure,no
+fmgr-01,Firewall manager,management,Fortinet FortiManager,corporate,Network Engineering,no
+dc-01,Domain controller,directory,Microsoft Windows Server (Active Directory),corporate,Identity,yes
+ot-jump-01,IT to OT jump host,jump_host,Microsoft Windows Server,ot_dmz,OT Engineering,yes
+hist-01,Plant data historian,historian,Plant historian server,ot_dmz,OT Engineering,yes
+ems-link-01,Energy management system data link,ems_gateway,EMS data gateway,ot_dmz,Grid Operations,yes

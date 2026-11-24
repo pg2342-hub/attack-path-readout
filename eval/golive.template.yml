@@ -1,0 +1,5 @@
+cases: cases.json
+checks: checks:checks
+agent: ticket_agents:template
+gate: gate.yml
+runs: 1

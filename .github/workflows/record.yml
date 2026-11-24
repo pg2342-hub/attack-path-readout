@@ -1,0 +1,51 @@
+name: Record live run
+on:
+  workflow_dispatch:
+    inputs:
+      open_issues:
+        description: Open the tickets as GitHub issues
+        default: "true"
+permissions:
+  contents: write
+  issues: write
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install anthropic "golive-gate[claude]==0.1.1"
+      - name: Write tickets with Claude, 3 runs, plus the weekly summaries
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m readout.run --agent claude --runs 3 --out runs/live --summaries
+      - name: Gate the live run, the rules-only baseline and the negative control
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          export PYTHONPATH=.
+          golive run eval/golive.live.judge.yml --out reports/live || true
+          golive run eval/golive.template.judge.yml --out reports/template || true
+          golive run eval/golive.naive.yml --out reports/naive || true
+      - name: Open tickets as issues
+        if: inputs.open_issues == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m readout.issues runs/live/run1 ${{ github.repository }}
+      - name: Rebuild the demo page
+        run: python docs/build_page.py
+      - name: Commit the recorded run and publish the page
+        run: |
+          git config user.name "Pranav Gudise"
+          git config user.email "273664482+pg2342-hub@users.noreply.github.com"
+          git add runs reports docs
+          git commit -m "Record a live run" || exit 0
+          git push origin HEAD:main
+          git fetch origin gh-pages || true
+          if git rev-parse --verify -q origin/gh-pages >/dev/null; then parent="-p origin/gh-pages"; else parent=""; fi
+          c=$(git commit-tree "$(git rev-parse HEAD:docs)" $parent -m "Publish the demo page")
+          git push origin "$c:refs/heads/gh-pages"

@@ -1,0 +1,5 @@
+cases: cases.json
+checks: judge_checks:checks
+agent: ticket_agents:recorded
+gate: gate.yml
+runs: 3

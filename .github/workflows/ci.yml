@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install anthropic golive-gate==0.1.1 ruff
+      - run: ruff check --select E,F,W --ignore E501 .
+      - name: Unit tests (guardrails, metrics, summary checks, Claude call with a stand-in client)
+        run: python -m unittest -v
+      - name: Negative control must be blocked
+        run: |
+          PYTHONPATH=. golive run eval/golive.naive.yml --out /tmp/naive || true
+          python -c "import json,sys; d=json.load(open('/tmp/naive/results.json'))['decision']; print('naive:', d); sys.exit(d != 'no-go')"
+      - name: Gate on the recorded live run (rule checks)
+        if: hashFiles('runs/live/run3/tickets.json') != ''
+        run: PYTHONPATH=. golive run eval/golive.live.yml --out /tmp/live

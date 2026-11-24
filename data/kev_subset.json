@@ -1,0 +1,158 @@
+{
+ "source": "CISA Known Exploited Vulnerabilities catalog",
+ "url": "https://raw.githubusercontent.com/cisagov/kev-data/main/known_exploited_vulnerabilities.json",
+ "catalogVersion": "2026.11.23",
+ "dateReleased": "2026-11-23T19:43:55.7979Z",
+ "vulnerabilities": [
+  {
+   "cveID": "CVE-2020-1472",
+   "vendorProject": "Microsoft",
+   "product": "Netlogon",
+   "vulnerabilityName": "Microsoft Netlogon Privilege Escalation Vulnerability",
+   "dateAdded": "2021-11-03",
+   "requiredAction": "Apply updates per vendor instructions.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Microsoft's Netlogon Remote Protocol (MS-NRPC) contains a privilege escalation vulnerability when an attacker establishes a vulnerable Netlogon secure channel connection to a domain controller. An attacker who successfully exploits the vulnerability could run a specially crafted application on a device on the network. The vulnerability is also known under the moniker of Zerologon."
+  },
+  {
+   "cveID": "CVE-2021-34527",
+   "vendorProject": "Microsoft",
+   "product": "Windows",
+   "vulnerabilityName": "Microsoft Windows Print Spooler Remote Code Execution Vulnerability",
+   "dateAdded": "2021-11-03",
+   "requiredAction": "Apply updates per vendor instructions.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Microsoft Windows Print Spooler contains an unspecified vulnerability due to the Windows Print Spooler service improperly performing privileged file operations. Successful exploitation allows an attacker to perform remote code execution with SYSTEM privileges. The vulnerability is also known under the moniker of PrintNightmare."
+  },
+  {
+   "cveID": "CVE-2021-44228",
+   "vendorProject": "Apache",
+   "product": "Log4j2",
+   "vulnerabilityName": "Apache Log4j2 Remote Code Execution Vulnerability",
+   "dateAdded": "2021-12-10",
+   "requiredAction": "For all affected software assets for which updates exist, the only acceptable remediation actions are: 1) Apply updates; OR 2) remove affected assets from agency networks. Temporary mitigations using one of the measures provided at https://www.cisa.gov/uscert/ed-22-02-apache-log4j-recommended-mitigation-measures are only acceptable until updates are available.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Apache Log4j2 contains a vulnerability where JNDI features do not protect against attacker-controlled JNDI-related endpoints, allowing for remote code execution."
+  },
+  {
+   "cveID": "CVE-2022-41040",
+   "vendorProject": "Microsoft",
+   "product": "Exchange Server",
+   "vulnerabilityName": "Microsoft Exchange Server Server-Side Request Forgery Vulnerability",
+   "dateAdded": "2022-09-30",
+   "requiredAction": "Apply updates per vendor instructions.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Microsoft Exchange Server allows for server-side request forgery. Dubbed \"ProxyNotShell,\" this vulnerability is chainable with CVE-2022-41082 which allows for remote code execution."
+  },
+  {
+   "cveID": "CVE-2023-20198",
+   "vendorProject": "Cisco",
+   "product": "IOS XE Web UI",
+   "vulnerabilityName": "Cisco IOS XE Web UI Privilege Escalation Vulnerability",
+   "dateAdded": "2023-10-16",
+   "requiredAction": "Verify that instances of Cisco IOS XE Web UI are in compliance with BOD 23-02 and apply mitigations per vendor instructions. For affected products (Cisco IOS XE Web UI exposed to the internet or to untrusted networks), follow vendor instructions to determine if a system may have been compromised and immediately report positive findings to CISA.",
+   "knownRansomwareCampaignUse": "Unknown",
+   "shortDescription": "Cisco IOS XE Web UI contains a privilege escalation vulnerability in the web user interface that could allow a remote, unauthenticated attacker to create an account with privilege level 15 access. The attacker can then use that account to gain control of the affected device."
+  },
+  {
+   "cveID": "CVE-2023-22515",
+   "vendorProject": "Atlassian",
+   "product": "Confluence Data Center and Server",
+   "vulnerabilityName": "Atlassian Confluence Data Center and Server Broken Access Control Vulnerability",
+   "dateAdded": "2023-10-05",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable. Check all affected Confluence instances for evidence of compromise per vendor instructions and report any positive findings to CISA.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Atlassian Confluence Data Center and Server contains a broken access control vulnerability that allows an attacker to create unauthorized Confluence administrator accounts and access Confluence."
+  },
+  {
+   "cveID": "CVE-2023-34362",
+   "vendorProject": "Progress",
+   "product": "MOVEit Transfer",
+   "vulnerabilityName": "Progress MOVEit Transfer SQL Injection Vulnerability",
+   "dateAdded": "2023-06-02",
+   "requiredAction": "Apply updates per vendor instructions.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Progress MOVEit Transfer contains a SQL injection vulnerability that could allow an unauthenticated attacker to gain unauthorized access to MOVEit Transfer's database. Depending on the database engine being used (MySQL, Microsoft SQL Server, or Azure SQL), an attacker may be able to infer information about the structure and contents of the database in addition to executing SQL statements that alter or delete database elements."
+  },
+  {
+   "cveID": "CVE-2023-46805",
+   "vendorProject": "Ivanti",
+   "product": "Connect Secure and Policy Secure",
+   "vulnerabilityName": "Ivanti Connect Secure and Policy Secure Authentication Bypass Vulnerability",
+   "dateAdded": "2024-01-10",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Ivanti Connect Secure (ICS, formerly known as Pulse Connect Secure) and Ivanti Policy Secure gateways contain an authentication bypass vulnerability in the web component that allows an attacker to access restricted resources by bypassing control checks. This vulnerability can be leveraged in conjunction with CVE-2024-21887, a command injection vulnerability."
+  },
+  {
+   "cveID": "CVE-2023-4966",
+   "vendorProject": "Citrix",
+   "product": "NetScaler ADC and NetScaler Gateway",
+   "vulnerabilityName": "Citrix NetScaler ADC and NetScaler Gateway Buffer Overflow Vulnerability",
+   "dateAdded": "2023-10-18",
+   "requiredAction": "Apply mitigations and kill all active and persistent sessions per vendor instructions [https://www.netscaler.com/blog/news/cve-2023-4966-critical-security-update-now-available-for-netscaler-adc-and-netscaler-gateway/] OR discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Citrix NetScaler ADC and NetScaler Gateway contain a buffer overflow vulnerability that allows for sensitive information disclosure when configured as a Gateway (VPN virtual server, ICA Proxy, CVPN, RDP Proxy) or AAA virtual server."
+  },
+  {
+   "cveID": "CVE-2024-1709",
+   "vendorProject": "ConnectWise",
+   "product": "ScreenConnect",
+   "vulnerabilityName": "ConnectWise ScreenConnect Authentication Bypass Vulnerability",
+   "dateAdded": "2024-02-22",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "ConnectWise ScreenConnect contains an authentication bypass vulnerability that allows an attacker with network access to the management interface to create a new, administrator-level account on affected devices."
+  },
+  {
+   "cveID": "CVE-2024-21762",
+   "vendorProject": "Fortinet",
+   "product": "FortiOS",
+   "vulnerabilityName": "Fortinet FortiOS Out-of-Bound Write Vulnerability",
+   "dateAdded": "2024-02-09",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Fortinet FortiOS contains an out-of-bound write vulnerability that allows a remote unauthenticated attacker to execute code or commands via specially crafted HTTP requests."
+  },
+  {
+   "cveID": "CVE-2024-21887",
+   "vendorProject": "Ivanti",
+   "product": "Connect Secure and Policy Secure",
+   "vulnerabilityName": "Ivanti Connect Secure and Policy Secure Command Injection Vulnerability",
+   "dateAdded": "2024-01-10",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Ivanti Connect Secure (ICS, formerly known as Pulse Connect Secure) and Ivanti Policy Secure contain a command injection vulnerability in the web components of these products, which can allow an authenticated administrator to send crafted requests to execute code on affected appliances. This vulnerability can be leveraged in conjunction with CVE-2023-46805, an authenticated bypass issue."
+  },
+  {
+   "cveID": "CVE-2024-3400",
+   "vendorProject": "Palo Alto Networks",
+   "product": "PAN-OS",
+   "vulnerabilityName": "Palo Alto Networks PAN-OS Command Injection Vulnerability",
+   "dateAdded": "2024-04-12",
+   "requiredAction": "Apply mitigations per vendor instructions as they become available. Otherwise, users with vulnerable versions of affected devices should enable Threat Prevention IDs available from the vendor. See the vendor bulletin for more details and a patch release schedule.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "Palo Alto Networks PAN-OS GlobalProtect feature contains a command injection vulnerability that allows an unauthenticated attacker to execute commands with root privileges on the firewall."
+  },
+  {
+   "cveID": "CVE-2024-37085",
+   "vendorProject": "VMware",
+   "product": "ESXi",
+   "vulnerabilityName": "VMware ESXi Authentication Bypass Vulnerability",
+   "dateAdded": "2024-07-30",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Known",
+   "shortDescription": "VMware ESXi contains an authentication bypass vulnerability. A malicious actor with sufficient Active Directory (AD) permissions can gain full access to an ESXi host that was previously configured to use AD for user management by re-creating the configured AD group ('ESXi Admins' by default) after it was deleted from AD."
+  },
+  {
+   "cveID": "CVE-2024-47575",
+   "vendorProject": "Fortinet",
+   "product": "FortiManager",
+   "vulnerabilityName": "Fortinet FortiManager Missing Authentication Vulnerability",
+   "dateAdded": "2024-10-23",
+   "requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+   "knownRansomwareCampaignUse": "Unknown",
+   "shortDescription": "Fortinet FortiManager contains a missing authentication vulnerability in the fgfmd daemon that allows a remote, unauthenticated attacker to execute arbitrary code or commands via specially crafted requests."
+  }
+ ]
+}
