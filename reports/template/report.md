@@ -11,7 +11,7 @@ Agent `ticket_agents:template`, 12 cases, 1 run(s).
 |---|---|---|
 | 1 | 0 of 12 | 0 |
 
-Agent cost 0.0000 USD, judge cost 0.0490 USD, mean latency 0.3 ms per case.
+Agent cost 0.0000 USD, judge cost 0.0506 USD, mean latency 0.3 ms per case.
 
 ## Cases
 
@@ -43,4 +43,4 @@ Agent cost 0.0000 USD, judge cost 0.0490 USD, mean latency 0.3 ms per case.
 | fix_steps_shape |  | Two to five ordered fix steps. |
 | verify_rerun |  | The verify steps end by asking for the path to be validated again. |
 | exec_line |  | The executive line is one plain sentence of at most 25 words with no CVE IDs. |
-| actionable |  | The owning team could act on this ticket without opening another document: it says which asset and product to change, the fix steps are concrete and in order (interim exposure cuts before patching), and it explains in plain words why the path matters to the business. The asset inventory has no version numbers, so one pointer to the vendor's fixed release for the named CVEs is expected and is not a fault; any other reliance on outside documents is. |
+| actionable |  | The owning team could act on this ticket without opening another document: it says which asset and product to change, the fix steps are concrete and in order (interim exposure cuts before patching), and it explains in plain words why the path matters to the business. The agent is given no vendor advisories, so one step that points to the vendor's advisory for the named CVEs (for the fixed release and the vendor's own mitigation or integrity-check steps) is expected and is not a fault, and a ticket must not invent those details. Any other step that only says 'per vendor instructions' is a fault. |

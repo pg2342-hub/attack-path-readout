@@ -1,26 +1,24 @@
 {
  "week1": {
-  "text": "By day 7 we validated 9 attack paths and closed 2, with a median of 4.5 days from validation to confirmed close and the slowest at 5. Owners acknowledged 8 tickets within 2 days across 6 teams. Of the 7 paths still open, 4 reach crown jewels and 4 sit with Network Engineering, including both VPN routes to the domain controller. The substation router path to the EMS data link waits on an OT change window scheduled for day 35, after the pilot ends. We need leadership to approve an earlier OT window for that router this week, or formally accept the risk until day 35.",
-  "model_text": "By day 7 we validated 9 attack paths and closed 2, with a median of 4.5 days from validation to confirmed close and the slowest at 5. Owners acknowledged 8 tickets within 2 days across 6 teams. Of the 7 paths still open, 4 reach crown jewels and 4 sit with Network Engineering, including both VPN routes to the domain controller. The substation router path to the EMS data link waits on an OT change window scheduled for day 35, after the pilot ends. We need leadership to approve an earlier OT window for that router this week, or formally accept the risk until day 35.",
+  "text": "In the first 7 days we validated 9 attack paths and confirmed 2 closed, with a median of 4.5 days from validation to confirmed close. Of the 7 paths still open, 4 reach crown jewels, and Network Engineering owns 4 of the open paths, including both VPN routes to the domain controller. Teams acknowledged 8 tickets within 2 days across 6 teams, so owners are engaged and the remaining work is in fixing. The substation router path to the EMS data link is waiting on an OT change window scheduled for day 35, after this pilot ends, and we need your help securing an earlier window.",
+  "model_text": "In the first 7 days we validated 9 attack paths and confirmed 2 closed, with a median of 4.5 days from validation to confirmed close. Of the 7 paths still open, 4 reach crown jewels, and Network Engineering owns 4 of the open paths, including both VPN routes to the domain controller. Teams acknowledged 8 tickets within 2 days across 6 teams, so owners are engaged and the remaining work is in fixing. The substation router path to the EMS data link is waiting on an OT change window scheduled for day 35, after this pilot ends, and we need your help securing an earlier window.",
   "problems": [],
   "used": "claude",
   "_meta": {
    "model": "claude-opus-5-5",
-   "latency_s": 9.49,
-   "cost_usd": 0.02373
+   "latency_s": 7.54,
+   "cost_usd": 0.01909
   }
  },
  "week4": {
-  "text": "By day 28, 12 attack paths were validated and 10 were fixed and confirmed closed by a retest. 2 remain open, 2 of them reaching crown-jewel systems.",
-  "model_text": "By day 28 we validated 12 attack paths and confirmed 10 closed, at a median of 6.0 days and a slowest of 20 days. Across 8 owning teams, 11 tickets were acknowledged within 2 days. The 2 open paths both reach crown jewels: substation router to the EMS data link (Field Telecom, 22 days open) and corporate network to the EMS data link via the OT jump host (OT Engineering, 11 days open). Each fix, the router upgrade and RDP restriction plus MFA on the jump host, awaits an OT change window scheduled for day 35. Please hold that day 35 window firm, or approve an earlier one.",
-  "problems": [
-   "numbers not in the metrics: 6.0"
-  ],
-  "used": "plain fallback",
+  "text": "By day 28 the pilot validated 12 attack paths and confirmed 10 closed, with a median of 6.0 days from validation to confirmed close and the slowest at 20 days. Teams responded well, acknowledging 11 tickets within 2 days across 8 teams. The 2 open paths both reach crown jewels via the EMS data link: a substation router path owned by Field Telecom, open 22 days, and a corporate-to-OT jump host path owned by OT Engineering, open 11 days. Both wait on an OT change window scheduled for day 35. This week, please approve an earlier OT change window or formally accept the risk until day 35.",
+  "model_text": "By day 28 the pilot validated 12 attack paths and confirmed 10 closed, with a median of 6.0 days from validation to confirmed close and the slowest at 20 days. Teams responded well, acknowledging 11 tickets within 2 days across 8 teams. The 2 open paths both reach crown jewels via the EMS data link: a substation router path owned by Field Telecom, open 22 days, and a corporate-to-OT jump host path owned by OT Engineering, open 11 days. Both wait on an OT change window scheduled for day 35. This week, please approve an earlier OT change window or formally accept the risk until day 35.",
+  "problems": [],
+  "used": "claude",
   "_meta": {
    "model": "claude-opus-5-5",
-   "latency_s": 14.01,
-   "cost_usd": 0.03344
+   "latency_s": 9.04,
+   "cost_usd": 0.02106
   }
  }
 }
