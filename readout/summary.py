@@ -55,7 +55,8 @@ def allowed_numbers(f: dict) -> set[str]:
 
 def check(text: str, f: dict) -> list[str]:
     problems = []
-    bad = sorted(set(NUM_RE.findall(text)) - allowed_numbers(f) - {"2"}, key=float)
+    allowed = {float(n) for n in allowed_numbers(f) | {"2"}}
+    bad = sorted({n for n in NUM_RE.findall(text) if float(n) not in allowed}, key=float)
     if bad:
         problems.append("numbers not in the metrics: " + ", ".join(bad))
     if re.search(r"CVE-\d{4}", text, re.I):

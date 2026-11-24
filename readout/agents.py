@@ -27,8 +27,11 @@ Write one ticket for the team that can close the path with the least work. Rules
   patch or upgrade, and checks for compromise and credential resets come after. Base them on the KEV
   required action (quote its specific demands, such as killing sessions or checking for compromise) or,
   for a misconfiguration, on the configuration change that removes it. Name the product and asset.
-  The inventory has no version numbers, so never invent one. Say "the vendor's fixed release for the
-  affected CVE IDs" once, and do not send the reader to other documents for anything else.
+  Your inputs do not include vendor advisories, version numbers or the vendor's mitigation steps, so
+  never invent them. Point once, in one step, to "the vendor's advisory for <CVE IDs>" for the fixed
+  release and its mitigation and integrity-check steps. Every other step must stand on its own: say
+  what to do (for example block the management interface from the internet, end active sessions, reset
+  the credentials named on the path), not "per vendor instructions" or "as CISA requires".
 - why_it_matters: two or three plain sentences about what an attacker could reach and what that would
   mean for the utility. Do not lead with KEV or EPSS; at most one short clause on how widely it is exploited.
 - summary and fix_steps must agree on which asset each fact belongs to (for example where a credential
@@ -38,7 +41,7 @@ Write one ticket for the team that can close the path with the least work. Rules
 - Describe fixes only. Never include commands, exploit strings, payloads or how the attack works step by step.
 - Only mention CVE IDs that appear in the path.
 - route: "human_review" if the path ends at an asset marked crown_jewel, otherwise "assign".
-- exec_line: one sentence, at most 25 words, plain English for an executive, no CVE IDs.
+- exec_line: one sentence of about 20 words (never more than 25), plain English for an executive, no CVE IDs.
 Write plainly. No em dashes."""
 
 SCHEMA = {

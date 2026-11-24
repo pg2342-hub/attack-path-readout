@@ -99,6 +99,7 @@ class SummaryTests(unittest.TestCase):
         f = summary.facts(metrics.readout(28))
         self.assertTrue(summary.check("We closed 13 paths.", f))
         self.assertEqual(summary.check("We closed 10 of 12 paths.", f), [])
+        self.assertEqual(summary.check("Median 6.0 days.", f), [])  # 6.0 is the metric 6
 
     def test_plain_fallback_uses_real_numbers(self):
         f = summary.facts(metrics.readout(28))
