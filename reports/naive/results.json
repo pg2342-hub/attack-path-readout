@@ -14,7 +14,7 @@
     ],
     "total_cost_usd": 0.0,
     "total_judge_cost_usd": 0.0,
-    "mean_latency_s": 9.1e-05
+    "mean_latency_s": 0.00016
   },
   "gate_result": {
     "decision": "no-go",
@@ -134,7 +134,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -207,7 +207,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -279,7 +279,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -352,7 +352,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -710,7 +710,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -781,7 +781,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {
@@ -926,7 +926,7 @@
             "fix_steps_shape"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
           "judge_cost_usd": 0.0,
           "verdicts": {

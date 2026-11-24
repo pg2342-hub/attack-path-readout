@@ -13,8 +13,8 @@
       }
     ],
     "total_cost_usd": 0.0,
-    "total_judge_cost_usd": 0.046328,
-    "mean_latency_s": 0.000224
+    "total_judge_cost_usd": 0.04904,
+    "mean_latency_s": 0.000318
   },
   "gate_result": {
     "decision": "no-go",
@@ -92,7 +92,7 @@
     },
     {
       "id": "actionable",
-      "text": "The owning team could act on this ticket without opening another document: it says which asset and product to change, the fix steps are concrete and in order, and it explains in plain words why the path matters to the business.",
+      "text": "The owning team could act on this ticket without opening another document: it says which asset and product to change, the fix steps are concrete and in order (interim exposure cuts before patching), and it explains in plain words why the path matters to the business. The asset inventory has no version numbers, so one pointer to the vendor's fixed release for the named CVEs is expected and is not a fault; any other reliance on outside documents is.",
       "critical": false
     }
   ],
@@ -110,9 +110,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0001,
+          "latency_s": 0.0002,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.00372,
+          "judge_cost_usd": 0.004036,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -152,7 +152,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The asset and product are named, but the fix is a single generic step (\"apply mitigations per vendor instructions\") that sends the team to another document, and \"Path ends at dc-01\" doesn't explain the business impact in plain words."
+              "reason": "The fix step only says \"apply mitigations per vendor instructions\" with no concrete ordered interim cuts or patch-to-fixed-release step, and \"Path ends at dc-01\" does not explain the business impact in plain words."
             }
           },
           "output": {
@@ -186,9 +186,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.00418,
+          "judge_cost_usd": 0.004196,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -228,7 +228,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset (vpn-gw-02) and the product (FortiOS SSL-VPN), but the fix step only says \"apply mitigations per vendor instructions,\" which forces the team to open another document, and \"Path ends at dc-01\" does not explain the business impact in plain words."
+              "reason": "The fix step only says to \"apply mitigations per vendor instructions,\" which relies on an outside document, gives no concrete interim exposure cuts or ordered patch steps, and \"Path ends at dc-01\" does not explain the business impact in plain words."
             }
           },
           "output": {
@@ -264,7 +264,7 @@
           "error": "",
           "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.004432,
+          "judge_cost_usd": 0.003948,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -304,7 +304,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The why-it-matters gives no plain-language business impact, and the fix step relies on an external vendor link rather than concrete, ordered steps."
+              "reason": "The fix is one vague step that defers to the vendor's instructions instead of giving ordered interim exposure cuts before patching, and \"Path ends at exch-01\" does not explain the business impact."
             }
           },
           "output": {
@@ -338,9 +338,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.003888,
+          "judge_cost_usd": 0.004384,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -380,7 +380,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket says to \"see the vendor bulletin,\" so the team must open another document, the fix step is one vague sentence rather than ordered concrete steps, and \"Path ends at hist-01\" does not explain the business impact."
+              "reason": "The fix step is pasted vendor text with no concrete ordered steps, and it relies on outside documents for the mitigations themselves. There are no interim exposure cuts before patching, and \"Path ends at hist-01\" gives no plain-language business reason."
             }
           },
           "output": {
@@ -414,9 +414,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.003292,
+          "judge_cost_usd": 0.003548,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -456,7 +456,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The asset and product are named, but the fix step is a single vague \"apply updates per vendor instructions\" with no concrete ordered steps, and \"why it matters\" gives no plain business explanation."
+              "reason": "The fix steps are a single vague \"apply updates per vendor instructions\" with no interim exposure cuts and no named CVEs, and \"why_it_matters\" never explains the business impact."
             }
           },
           "output": {
@@ -490,9 +490,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.004216,
+          "judge_cost_usd": 0.003912,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -532,7 +532,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset and product, but \"why_it_matters\" only says \"Path ends at wiki-ext\" with no plain-language business impact, and the fix is one compound vendor-boilerplate step (\"per vendor instructions\") rather than concrete ordered steps the team could follow without other documents."
+              "reason": "The fix steps lean on \"per vendor instructions\" for both mitigation and compromise checks, with no concrete ordered interim exposure cuts, and \"why it matters\" gives no plain-language business impact."
             }
           },
           "output": {
@@ -566,9 +566,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.003884,
+          "judge_cost_usd": 0.00416,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -608,7 +608,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset (rmm-01) and the product (ScreenConnect), but its single fix step is vague boilerplate (\"apply mitigations per vendor instructions\"), and \"Path ends at esxi-07\" does not explain the business impact."
+              "reason": "The fix step only says \"apply mitigations per vendor instructions\", which leans on an outside document and gives no concrete, ordered interim exposure cuts before patching; \"Path ends at esxi-07\" also doesn't explain the business impact in plain words."
             }
           },
           "output": {
@@ -642,9 +642,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0004,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.004188,
+          "judge_cost_usd": 0.004344,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -684,7 +684,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The asset and product are named, but the fix is one pasted vendor paragraph rather than ordered concrete steps, it points to outside sources (BOD 23-02, vendor instructions), and \"Path ends at ems-link-01\" does not explain the business impact."
+              "reason": "The fix step relies on outside documents (BOD 23-02 and \"vendor instructions\") rather than giving concrete, ordered steps with interim exposure cuts, and \"why_it_matters\" never says in plain words what the path means for the business."
             }
           },
           "output": {
@@ -718,9 +718,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0004,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.00372,
+          "judge_cost_usd": 0.004576,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -760,7 +760,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset, but \"why it matters\" gives no business impact and the fix step is a pasted CISA directive that points to an external URL rather than giving concrete, ordered steps."
+              "reason": "It names the asset and product, but the fix steps are pasted CISA boilerplate that sends the reader to an outside URL for the interim mitigations, they are not a concrete ordered sequence with exposure cuts before patching, and \"why it matters\" gives no plain business explanation."
             }
           },
           "output": {
@@ -794,9 +794,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.003836,
+          "judge_cost_usd": 0.004192,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -836,7 +836,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset and product, but the fix is a single vague \"apply mitigations per vendor instructions\" step that requires opening another document, and \"why_it_matters\" only says \"Path ends at fmgr-01\" without explaining the business impact."
+              "reason": "The fix step only says to apply mitigations \"per vendor instructions,\" which defers to an outside document and gives no concrete ordered steps such as an interim exposure cut followed by patching, and \"Path ends at fmgr-01\" does not explain the business impact."
             }
           },
           "output": {
@@ -870,9 +870,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.003612,
+          "judge_cost_usd": 0.003708,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -912,7 +912,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The asset and product are named, but there is only one vague step (\"apply updates per vendor instructions\") with no ordered concrete actions such as Netlogon enforcement, and \"Path ends at dc-01\" does not explain the business impact."
+              "reason": "The only fix step is a vague \"apply updates per vendor instructions\" with no interim exposure cuts, enforcement, or ordering, and \"Path ends at dc-01\" does not explain the business impact."
             }
           },
           "output": {
@@ -946,9 +946,9 @@
             "actionable"
           ],
           "error": "",
-          "latency_s": 0.0002,
+          "latency_s": 0.0003,
           "cost_usd": 0.0,
-          "judge_cost_usd": 0.00336,
+          "judge_cost_usd": 0.004036,
           "verdicts": {
             "fix_point": {
               "result": "pass",
@@ -988,7 +988,7 @@
             },
             "actionable": {
               "result": "fail",
-              "reason": "The ticket names the asset but not the product, gives one vague step instead of concrete ordered steps, and \"Path ends at ems-link-01\" does not explain the business impact."
+              "reason": "The ticket names the asset but not the product, gives a single vague fix step with no interim exposure cuts and no concrete MFA or RDP-scoping steps, and \"Path ends at ems-link-01\" does not explain the business impact."
             }
           },
           "output": {

@@ -12,7 +12,7 @@ Agent `ticket_agents:naive`, 12 cases, 1 run(s).
 |---|---|---|
 | 1 | 0 of 12 | 6 |
 
-Agent cost 0.0000 USD, judge cost 0.0000 USD, mean latency 0.1 ms per case.
+Agent cost 0.0000 USD, judge cost 0.0000 USD, mean latency 0.2 ms per case.
 
 ## Cases
 
