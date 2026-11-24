@@ -1,0 +1,26 @@
+{
+ "week1": {
+  "text": "In the first 7 days the pilot validated 9 attack paths, and owners closed 2 with a median of 4.5 days from validation to confirmed close. Of the 7 still open, 4 reach crown jewel systems, and Network Engineering owns 4 of the 7, including both VPN paths to the domain controller, open 4 days. Owners acknowledged 8 tickets within 2 days across 6 teams, so engagement is strong. The substation router path to the EMS data link is waiting on an OT change window scheduled for day 35, after the pilot ends. We need leadership to approve an earlier OT change window for that router upgrade.",
+  "model_text": "In the first 7 days the pilot validated 9 attack paths, and owners closed 2 with a median of 4.5 days from validation to confirmed close. Of the 7 still open, 4 reach crown jewel systems, and Network Engineering owns 4 of the 7, including both VPN paths to the domain controller, open 4 days. Owners acknowledged 8 tickets within 2 days across 6 teams, so engagement is strong. The substation router path to the EMS data link is waiting on an OT change window scheduled for day 35, after the pilot ends. We need leadership to approve an earlier OT change window for that router upgrade.",
+  "problems": [],
+  "used": "claude",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "latency_s": 9.6,
+   "cost_usd": 0.02545
+  }
+ },
+ "week4": {
+  "text": "By day 28, 12 attack paths were validated and 10 were fixed and confirmed closed by a retest. 2 remain open, 2 of them reaching crown-jewel systems.",
+  "model_text": "By day 28 the pilot validated 12 attack paths and confirmed 10 closed, with a median of 6.0 days to confirmed close and the slowest taking 20 days. Owners acknowledged 11 tickets within 2 days across 8 teams. The 2 paths still open both reach crown jewels via the EMS data link: a substation router owned by Field Telecom, open 22 days, and a corporate route through the OT jump host owned by OT Engineering, open 11 days. Both fixes need the OT change window scheduled for day 35. This week, please decide whether to accept that crown jewel exposure until day 35 or authorize an earlier emergency OT change window.",
+  "problems": [
+   "numbers not in the metrics: 6.0"
+  ],
+  "used": "plain fallback",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "latency_s": 13.55,
+   "cost_usd": 0.0323
+  }
+ }
+}

@@ -1,0 +1,375 @@
+{
+ "P01": {
+  "title": "Patch Ivanti Connect Secure on vpn-gw-01 to break the validated VPN-to-domain-controller path (P01)",
+  "summary": "The validation tool confirmed path P01. It chains CVE-2023-46805 and CVE-2024-21887 on the internet-facing Ivanti Connect Secure gateway vpn-gw-01 to get a shell. From there it reuses cached admin credentials on the IT jump host jump-it-01, then uses RDP rights from the jump host admin group to reach the domain controller dc-01. Fixing vpn-gw-01, the entry point, breaks the whole path.",
+  "why_it_matters": "Both CVEs are in CISA KEV with known ransomware campaign use. EPSS scores are 0.99984 and 0.99999, near the top of all scored vulnerabilities. The path ends at dc-01, a crown jewel domain controller, and control of it would mean control of corporate identity.",
+  "fix_point_asset": "vpn-gw-01",
+  "fix_steps": [
+   "Apply the Ivanti mitigations for CVE-2023-46805 and CVE-2024-21887 to Ivanti Connect Secure on vpn-gw-01, per vendor instructions, and move to a fixed release as soon as one is available for your version.",
+   "If the vendor mitigations cannot be applied, follow the KEV required action to discontinue use of the product: take vpn-gw-01 offline and move users to an alternate remote access path.",
+   "Check vpn-gw-01 for signs of compromise with Ivanti's integrity checking tool. If it finds anything, escalate to incident response before returning the appliance to service.",
+   "Remove any admin credentials cached on vpn-gw-01. Work with the Windows Server team to rotate every credential that was stored on the appliance, including those valid on jump-it-01."
+  ],
+  "verify_steps": [
+   "Confirm in the Ivanti Connect Secure admin console that the vendor mitigation or fixed release is active on vpn-gw-01, and that it is still active after a reboot.",
+   "Confirm the Ivanti integrity check on vpn-gw-01 comes back clean and that the old cached admin credentials no longer authenticate to jump-it-01.",
+   "Ask the security team to rerun the validation of path P01 and confirm it no longer gets past vpn-gw-01."
+  ],
+  "exec_line": "Our corporate VPN has a widely exploited flaw that lets outsiders reach the domain controller; Network Engineering will patch it now.",
+  "route": "human_review",
+  "route_reason": "The path ends at dc-01, the domain controller, which is marked as a crown jewel.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "Network Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 2486,
+   "output_tokens": 1081,
+   "latency_s": 11.77,
+   "cost_usd": 0.03156,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P02": {
+  "title": "Patch or mitigate Fortinet FortiOS SSL-VPN on vpn-gw-02 to break path P02 to the domain controller",
+  "summary": "Validated path P02 starts at the internet-facing field office VPN (vpn-gw-02, Fortinet FortiOS SSL-VPN) through CVE-2024-21762. It then reaches the file and print server fs-02 through CVE-2021-34527 and ends at domain controller dc-01 using a cached domain admin logon on fs-02. Fixing the VPN entry point breaks the whole path.",
+  "why_it_matters": "The path ends at dc-01, a crown jewel. Control of the domain controller means control of the corporate Windows domain. Both CVEs are in the CISA KEV catalog with known ransomware campaign use. EPSS scores are very high: 0.846 for CVE-2024-21762 (99.7th percentile) and 0.998 for CVE-2021-34527 (99.96th percentile). The entry point is reachable from the internet without authentication.",
+  "fix_point_asset": "vpn-gw-02",
+  "fix_steps": [
+   "Network Engineering: Upgrade Fortinet FortiOS on vpn-gw-02 (Remote access VPN, field offices) to a fixed release for CVE-2024-21762, following Fortinet's advisory.",
+   "If no fixed release can be applied right away, follow the KEV required action to 'apply mitigations per vendor instructions', such as Fortinet's interim mitigation of disabling SSL-VPN on vpn-gw-02. If mitigations are unavailable, 'discontinue use of the product' for field office access until it is patched.",
+   "Because this flaw has known ransomware use, check vpn-gw-02 for signs of prior compromise using Fortinet's published guidance. Review its configuration, admin accounts and logs, and escalate any findings to incident response.",
+   "Open follow-up tickets for the later steps: Windows Server to patch CVE-2021-34527 on fs-02, and Identity to remove the cached domain admin logon from fs-02."
+  ],
+  "verify_steps": [
+   "Confirm the FortiOS version on vpn-gw-02 is at or above the fixed release in Fortinet's advisory for CVE-2024-21762, or that the vendor mitigation is in place.",
+   "Run an authenticated vulnerability scan of vpn-gw-02 and confirm CVE-2024-21762 is no longer reported.",
+   "Request a rerun of the validation of path P02 and confirm the foothold on vpn-gw-02 no longer succeeds."
+  ],
+  "exec_line": "An internet-facing VPN flaw gives attackers a route to our domain controller; patching the VPN closes the route.",
+  "route": "human_review",
+  "route_reason": "The path ends at dc-01, the domain controller, which is marked crown_jewel.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "Network Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 2250,
+   "output_tokens": 937,
+   "latency_s": 9.58,
+   "cost_usd": 0.02774,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P03": {
+  "title": "Patch Citrix NetScaler Gateway on nsg-01 and kill all sessions to break contractor path to email server (P03)",
+  "summary": "Validated path P03 starts at the internet-facing Contractor gateway (nsg-01, Citrix NetScaler Gateway). Session tokens leaked through CVE-2023-4966 let a contractor session be taken over. From there the Email server (exch-01, Microsoft Exchange Server) responded to a server-side request forgery check for CVE-2022-41040. Fixing nsg-01 removes the entry point and breaks the whole path.",
+  "why_it_matters": "Both CVEs are in the CISA KEV catalog with known ransomware campaign use. EPSS scores are 0.99999 for CVE-2023-4966 and 0.99956 for CVE-2022-41040, both near the top percentile. The gateway faces the internet, and taking over contractor sessions gives an attacker a trusted foothold into the corporate zone and the email server.",
+  "fix_point_asset": "nsg-01",
+  "fix_steps": [
+   "Apply the Citrix security update for CVE-2023-4966 to the Citrix NetScaler Gateway on nsg-01 (Contractor gateway), following the vendor instructions referenced in the KEV entry.",
+   "Per the KEV required action, \"kill all active and persistent sessions\" on nsg-01 immediately after the update, so any tokens leaked before patching become useless.",
+   "Check nsg-01 and contractor accounts for signs of compromise: review gateway session logs for unusual source addresses or session reuse, and reset credentials for any contractor accounts that look suspicious.",
+   "If the update cannot be applied, follow the KEV direction to \"discontinue use of the product\" for contractor access until mitigations are available, and notify Messaging so they can prioritize patching exch-01."
+  ],
+  "verify_steps": [
+   "Confirm the Citrix NetScaler Gateway firmware version on nsg-01 matches or exceeds the fixed build listed in the Citrix advisory.",
+   "Confirm the active session list on nsg-01 contains only sessions created after the update and session termination.",
+   "Request a rerun of the validation for attack path P03 to confirm the contractor gateway no longer leaks session tokens and the path is broken."
+  ],
+  "exec_line": "An internet-facing contractor gateway could let attackers hijack sessions and reach our email server; patching it and resetting sessions closes this path.",
+  "route": "assign",
+  "route_reason": "The path ends at exch-01 (Email server), which is not marked as a crown jewel, so the ticket goes directly to Network Engineering, owner of nsg-01.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "Network Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 2146,
+   "output_tokens": 931,
+   "latency_s": 10.17,
+   "cost_usd": 0.0272,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P04": {
+  "title": "P04: Patch GlobalProtect on plant edge firewall fw-edge-03 to cut internet path to the data historian",
+  "summary": "Validation confirmed that an unauthenticated attacker on the internet can reach the plant data historian (hist-01). The entry point is a command injection flaw, CVE-2024-3400, in the GlobalProtect portal on the Palo Alto Networks PAN-OS plant edge firewall (fw-edge-03). From there, a local admin password shared between the firewall management account and the IT to OT jump host (ot-jump-01) opened the jump host, and the jump host can log on to the historian. No commands were sent to the historian. Fixing fw-edge-03 breaks the path at its first step.",
+  "why_it_matters": "CVE-2024-3400 is in the CISA KEV catalog with known ransomware campaign use. Its EPSS score is 0.99999, which is in the 100th percentile for likelihood of exploitation. The flaw gives root command execution on an internet-facing firewall, and the path ends at the plant data historian, a crown jewel in the OT DMZ.",
+  "fix_point_asset": "fw-edge-03",
+  "fix_steps": [
+   "Network Engineering: upgrade Palo Alto Networks PAN-OS on fw-edge-03 (plant edge firewall with GlobalProtect) to a fixed release from the vendor bulletin, as the KEV entry requires: \"Apply mitigations per vendor instructions.\"",
+   "Until the upgrade is complete, follow the KEV fallback for vulnerable versions: \"enable Threat Prevention IDs available from the vendor.\" Confirm they are applied to the GlobalProtect traffic on fw-edge-03.",
+   "Command injection was confirmed during validation, so check fw-edge-03 for signs of compromise using the vendor's published guidance. If anything suspicious is found, escalate to incident response before returning the device to normal service.",
+   "Rotate the local management account password on fw-edge-03 to a unique value that is not used on any other system, including ot-jump-01, and store it in the privileged access vault."
+  ],
+  "verify_steps": [
+   "Confirm that the PAN-OS version running on fw-edge-03 is listed as fixed in the vendor bulletin for CVE-2024-3400.",
+   "Confirm that the fw-edge-03 management password has been rotated and no longer matches the local admin password on ot-jump-01.",
+   "Request a rerun of the validation of path P04 and confirm the attack no longer succeeds at fw-edge-03."
+  ],
+  "exec_line": "An internet-facing plant firewall flaw could let attackers reach the plant data historian. Network Engineering will patch it and change a shared password.",
+  "route": "human_review",
+  "route_reason": "The path ends at hist-01, the plant data historian, which is marked crown_jewel. The intermediate jump host ot-jump-01 is also a crown jewel. OT Engineering should separately review the shared local admin password on ot-jump-01 and the historian's acceptance of logons from the jump host.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "Network Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 2002,
+   "output_tokens": 1202,
+   "latency_s": 11.64,
+   "cost_usd": 0.03205,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P05": {
+  "title": "Patch Progress MOVEit Transfer on mft-01 (Vendor file exchange) for CVE-2023-34362",
+  "summary": "The validation tool confirmed an unauthenticated SQL injection in Progress MOVEit Transfer on mft-01, the internet-facing vendor file exchange. The test read only the version table, but the flaw gives access to the MOVEit Transfer database. This is a single-step path, so fixing mft-01 breaks it.",
+  "why_it_matters": "CVE-2023-34362 is in the CISA KEV catalog with known ransomware campaign use, and its EPSS score is 0.99934 (99.97th percentile), meaning exploitation is near certain. The KEV description states an attacker may read, alter or delete database contents. mft-01 is exposed to the internet and holds vendor file exchange data.",
+  "fix_point_asset": "mft-01",
+  "fix_steps": [
+   "Enterprise Applications: per the KEV required action, \"Apply updates per vendor instructions\" to Progress MOVEit Transfer on mft-01, using the fixed version Progress lists for your release line.",
+   "Until the update is applied, restrict or block internet HTTP and HTTPS access to the mft-01 MOVEit Transfer web interface, following the vendor's mitigation guidance.",
+   "Because this flaw has been widely exploited, check mft-01 for signs of prior compromise using the vendor's published indicators, such as unexpected files in the web root, unknown accounts and unusual database or download activity.",
+   "If any indicators are found, escalate to the security team before reopening access, and reset the service and admin credentials MOVEit Transfer uses."
+  ],
+  "verify_steps": [
+   "Confirm the MOVEit Transfer version on mft-01 matches or exceeds the fixed version in the Progress advisory for CVE-2023-34362.",
+   "Confirm the compromise check came back clean, or that any findings were handed to the security team.",
+   "Ask the security team to rerun validation of path P05 against mft-01 and confirm it no longer succeeds."
+  ],
+  "exec_line": "Our internet-facing vendor file exchange has a heavily exploited flaw that exposes its data; patching it is urgent.",
+  "route": "assign",
+  "route_reason": "The path ends at mft-01, which is not marked as a crown jewel, so it goes straight to the Enterprise Applications team.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "Enterprise Applications",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1598,
+   "output_tokens": 776,
+   "latency_s": 7.87,
+   "cost_usd": 0.02191,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P06": {
+  "title": "Patch Atlassian Confluence on Partner wiki (wiki-ext) to close internet-reachable admin setup endpoint (CVE-2023-22515)",
+  "summary": "Validated path P06 shows the Partner wiki (wiki-ext), running Atlassian Confluence Data Center in the internet zone, exposes the setup endpoint that allows creating an administrator account due to CVE-2023-22515. The validation agent confirmed the endpoint was reachable and stopped before creating an account. This is the only step on the path, so fixing wiki-ext breaks it entirely.",
+  "why_it_matters": "CVE-2023-22515 is on the CISA KEV list with known ransomware campaign use, and its EPSS score is 0.9923 (99.9th percentile), meaning exploitation is highly likely. An attacker could create an unauthorized Confluence administrator account and take full control of the Partner wiki and the partner data it holds.",
+  "fix_point_asset": "wiki-ext",
+  "fix_steps": [
+   "Apply the Atlassian fixed version or vendor mitigations for CVE-2023-22515 to Confluence Data Center on wiki-ext, per the KEV required action to \"apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.\"",
+   "Until patched, block internet access to the Confluence setup endpoints on wiki-ext per Atlassian's interim mitigation guidance, or take the Partner wiki offline from the internet.",
+   "Check wiki-ext for evidence of compromise per vendor instructions, as KEV requires: review the administrator group for unexpected members, recently created accounts, and unexpected installed plugins.",
+   "If any compromise is found, disable unauthorized accounts, preserve logs, escalate to the security team, and report positive findings to CISA as the KEV required action demands."
+  ],
+  "verify_steps": [
+   "Confirm the Confluence version on wiki-ext is at or above the Atlassian fixed release for CVE-2023-22515.",
+   "Confirm from an external network that the Confluence setup endpoints on wiki-ext are no longer reachable or return an access-denied response.",
+   "Request a rerun of the validation for attack path P06 (Partner wiki takeover) to confirm the path is broken."
+  ],
+  "exec_line": "Our internet-facing partner wiki has a flaw actively used by ransomware gangs to seize admin control; patching it now closes the risk.",
+  "route": "assign",
+  "route_reason": "The path ends at wiki-ext, which is not marked as a crown jewel, so the ticket goes directly to the Collaboration Tools team.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "Collaboration Tools",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1598,
+   "output_tokens": 859,
+   "latency_s": 8.95,
+   "cost_usd": 0.02357,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P07": {
+  "title": "Patch ConnectWise ScreenConnect on rmm-01 to break path P07 to the virtualization cluster",
+  "summary": "Validated path P07 starts at the internet-facing Remote support console (rmm-01, ConnectWise ScreenConnect), where the setup wizard was reachable without authentication (CVE-2024-1709). From there it reaches the Virtualization cluster (esxi-07, VMware ESXi), which trusts a directory group the support console can create (CVE-2024-37085). Fixing rmm-01, the entry point, breaks the whole path.",
+  "why_it_matters": "Both CVEs are in the CISA KEV catalog with known ransomware campaign use. CVE-2024-1709 has an EPSS score of 0.99983, which is near certain exploitation activity, and it sits on an internet-facing asset. A successful chain gives full control of the hypervisor and every virtual machine on it, which is a common ransomware outcome.",
+  "fix_point_asset": "rmm-01",
+  "fix_steps": [
+   "Apply mitigations per vendor instructions for CVE-2024-1709 on ConnectWise ScreenConnect (rmm-01) by upgrading to the vendor's fixed release. If mitigations are unavailable, discontinue use of the product as the KEV required action states.",
+   "Until the upgrade is done, remove rmm-01 from direct internet exposure or restrict access to known support networks.",
+   "Check rmm-01 for compromise: review the ScreenConnect user list for unknown administrator accounts, remove any you did not create, and reset credentials for all remaining administrators.",
+   "Notify Infrastructure so they can track the follow-up fix for CVE-2024-37085 on VMware ESXi (esxi-07) separately."
+  ],
+  "verify_steps": [
+   "Confirm the ScreenConnect version on rmm-01 matches or exceeds the vendor's fixed release for CVE-2024-1709.",
+   "Confirm the setup wizard on rmm-01 now requires authentication or is no longer reachable, and the administrator account list contains only approved accounts.",
+   "Ask the security team to rerun the validation of path P07 and confirm it no longer succeeds."
+  ],
+  "exec_line": "An internet-facing remote support tool could let attackers take over our server virtualization platform; the service desk is patching it now.",
+  "route": "assign",
+  "route_reason": "The path ends at esxi-07, which is not marked crown_jewel, so the ticket goes directly to the IT Service Desk, owner of the entry point rmm-01.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "IT Service Desk",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 2063,
+   "output_tokens": 832,
+   "latency_s": 8.42,
+   "cost_usd": 0.02489,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P08": {
+  "title": "Remove internet exposure of Cisco IOS XE Web UI on rtr-sub-12 to break path to EMS data link",
+  "summary": "Validated path P08 starts at the Substation comms router (rtr-sub-12, Cisco IOS XE), whose web UI is reachable from the internet and runs an affected version (CVE-2023-20198, on CISA KEV). From there, a route reaches the Energy management system data link (ems-link-01) with no access list in between. Fixing the router breaks the whole path.",
+  "why_it_matters": "CVE-2023-20198 lets a remote, unauthenticated attacker create a top-privilege account and take control of the device. It is on the CISA KEV list and has an EPSS score of 0.998 (99.96th percentile), so exploitation is very likely. Control of this router gives a direct route to the EMS data link, a crown jewel asset for grid operations.",
+  "fix_point_asset": "rtr-sub-12",
+  "fix_steps": [
+   "Field Telecom: remove internet and untrusted network access to the Cisco IOS XE Web UI on rtr-sub-12 by disabling the web UI or restricting it to a trusted management network, in line with BOD 23-02.",
+   "Apply the Cisco fixed software release and mitigations for CVE-2023-20198 to rtr-sub-12, per vendor instructions.",
+   "As the KEV required action demands, follow Cisco's instructions to determine whether rtr-sub-12 may have been compromised, including reviewing for unknown privileged local accounts and unexpected implants, and immediately report any positive findings to CISA.",
+   "If compromise is found or cannot be ruled out, remove unauthorized accounts, rotate all router credentials and keys, and coordinate with Grid Operations to add an access list between the substation comms network and the EMS data link."
+  ],
+  "verify_steps": [
+   "Confirm from an external vantage point that the Cisco IOS XE Web UI on rtr-sub-12 is no longer reachable from the internet.",
+   "Confirm rtr-sub-12 runs a Cisco fixed release for CVE-2023-20198 and that the account list shows only approved accounts.",
+   "Request a rerun of the validation for path P08 to confirm the path to ems-link-01 is broken."
+  ],
+  "exec_line": "An internet-exposed substation router with a widely exploited flaw could give attackers a route to our energy management system; we are closing it.",
+  "route": "human_review",
+  "route_reason": "The path ends at ems-link-01, the Energy management system data link, which is marked as a crown jewel asset.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "Field Telecom",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1858,
+   "output_tokens": 841,
+   "latency_s": 8.56,
+   "cost_usd": 0.02425,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P09": {
+  "title": "Patch Apache Log4j2 on internet-facing Outage map API (outage-api) to close remote code execution path P09",
+  "summary": "Validated path P09 shows the internet-facing Outage map API (outage-api), a Java service using Apache Log4j2, is exploitable through CVE-2021-44228. A harmless test string in a request header caused the service to make an outbound DNS query, confirming the vulnerable lookup behavior is active. This is a single-step path from the internet to code execution on the asset.",
+  "why_it_matters": "CVE-2021-44228 is in the CISA KEV catalog with known ransomware campaign use, and its EPSS score is 0.99999 (100th percentile), meaning exploitation attempts are near certain. The asset sits directly on the internet, so anyone can reach it. Remote code execution here would give an attacker a foothold inside the utility's customer application environment.",
+  "fix_point_asset": "outage-api",
+  "fix_steps": [
+   "Customer Applications: identify every copy of Apache Log4j2 bundled in the Outage map API (outage-api), including nested libraries and shaded JARs.",
+   "Per the CISA KEV required action, apply updates: upgrade Apache Log4j2 to a current fixed release and redeploy outage-api. If an update cannot be deployed right away, remove the asset from the network until it can.",
+   "Use the CISA ED 22-02 temporary mitigations only until the update is deployed, not as a permanent fix.",
+   "Because the flaw was reachable from the internet with known ransomware use, review outage-api logs, outbound connections and host for signs of prior compromise, and escalate to incident response if any are found."
+  ],
+  "verify_steps": [
+   "Confirm the deployed outage-api build contains only the patched Apache Log4j2 version and no older Log4j2 copies remain.",
+   "Check that the service no longer makes outbound DNS or other lookups in response to request header content.",
+   "Request a rerun of the validation for path P09 to confirm the path is broken."
+  ],
+  "exec_line": "Our public outage map service has a widely exploited flaw that could let attackers take control; we are patching it immediately.",
+  "route": "assign",
+  "route_reason": "The path ends at outage-api, which is not marked as a crown jewel, so it goes straight to the Customer Applications team.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "Customer Applications",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1613,
+   "output_tokens": 748,
+   "latency_s": 10.1,
+   "cost_usd": 0.02141,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P10": {
+  "title": "Patch and restrict Fortinet FortiManager fmgr-01 device registration exposure (CVE-2024-47575)",
+  "summary": "Validated path P10 shows the Firewall manager (fmgr-01, Fortinet FortiManager) on an affected version with its device registration port reachable from the corporate user network. CVE-2024-47575 is a missing authentication flaw in the FortiManager fgfmd daemon that lets a remote, unauthenticated attacker execute code. It is listed in CISA KEV, and EPSS rates exploitation likelihood at 0.948 (99.9th percentile). Fixing fmgr-01 breaks the only step on this path.",
+  "why_it_matters": "FortiManager centrally controls firewall configurations. Takeover of fmgr-01 could let an attacker read or change firewall policy across the utility's network, weakening segmentation that protects operational systems. The flaw needs no credentials, is known to be exploited, and is reachable from ordinary corporate user machines.",
+  "fix_point_asset": "fmgr-01",
+  "fix_steps": [
+   "Apply mitigations per vendor instructions, as CISA KEV requires: upgrade Fortinet FortiManager on fmgr-01 to the fixed release listed in Fortinet's advisory for CVE-2024-47575.",
+   "Until the upgrade is done, apply Fortinet's interim mitigations for fmgr-01, such as blocking registration attempts from unknown devices and limiting which managed device addresses may register.",
+   "Restrict network access so the fmgr-01 device registration port is reachable only from managed Fortinet devices, not from the corporate user network.",
+   "Check fmgr-01 for signs of prior compromise using the indicators in Fortinet's advisory, including unexpected registered devices and unexplained configuration changes. Escalate to incident response if any are found.",
+   "If the fix and mitigations cannot be applied, follow the KEV direction to discontinue use of the product until they can."
+  ],
+  "verify_steps": [
+   "Confirm the FortiManager version on fmgr-01 matches or exceeds the fixed release in Fortinet's advisory.",
+   "From a corporate user network host, confirm the fmgr-01 device registration port no longer answers, and confirm managed firewalls still register normally.",
+   "Request a rerun of the validation for path P10 to confirm the path is broken."
+  ],
+  "exec_line": "Our firewall management server has a known, actively exploited flaw reachable from office networks; Network Engineering will patch and restrict it now.",
+  "route": "assign",
+  "route_reason": "The path ends at fmgr-01, which is not marked as a crown jewel, so it goes directly to the owner team, Network Engineering.",
+  "guardrail_problems": [],
+  "final_route": "assign",
+  "owner_team": "Network Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1549,
+   "output_tokens": 884,
+   "latency_s": 9.32,
+   "cost_usd": 0.02388,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P11": {
+  "title": "Patch Netlogon on domain controller dc-01 to block takeover from the corporate network (P11)",
+  "summary": "Validation path P11 confirmed that the domain controller dc-01 (Microsoft Windows Server, Active Directory) accepted a vulnerable Netlogon secure channel from an ordinary corporate workstation, exposing CVE-2020-1472 (Zerologon). The validation agent stopped before changing any password. dc-01 is the first and only step on the path, so fixing it breaks the path.",
+  "why_it_matters": "CVE-2020-1472 is in the CISA KEV catalog with known ransomware campaign use, and its EPSS score is 0.99389 (99.9th percentile), so exploitation is highly likely. dc-01 is a crown jewel. Any corporate workstation could use this weakness to take control of the domain and every system that trusts it.",
+  "fix_point_asset": "dc-01",
+  "fix_steps": [
+   "Per the CISA KEV required action, \"Apply updates per vendor instructions\": install Microsoft's current cumulative security update for Netlogon on dc-01 and on every other domain controller in the domain.",
+   "Confirm Netlogon secure channel enforcement mode is active on dc-01 as described in Microsoft's Netlogon guidance, and remove any policy exceptions that still allow vulnerable connections.",
+   "Identify any non-Windows or legacy devices that relied on vulnerable Netlogon connections, and update or replace them instead of granting exceptions.",
+   "Because exploitation is known in the wild, review dc-01 for signs of prior compromise, such as unexpected domain controller machine account password changes or new privileged accounts, and escalate any findings to incident response."
+  ],
+  "verify_steps": [
+   "Confirm that dc-01 and all other domain controllers report the Microsoft security update containing the Netlogon fix as installed.",
+   "Review the Netlogon events in the dc-01 System event log and confirm that vulnerable secure channel connections are being denied, not allowed.",
+   "Ask the security team to rerun validation of path P11 and confirm that dc-01 no longer accepts a vulnerable Netlogon secure channel from the corporate network."
+  ],
+  "exec_line": "Our main domain controller can be taken over from any office computer; a vendor update closes the gap and is urgent.",
+  "route": "human_review",
+  "route_reason": "The path ends at dc-01, which is marked as a crown jewel, so a person must review the ticket before it is assigned.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "Identity",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1600,
+   "output_tokens": 1071,
+   "latency_s": 12.16,
+   "cost_usd": 0.02782,
+   "stop_reason": "end_turn"
+  }
+ },
+ "P12": {
+  "title": "Restrict RDP and require MFA on OT jump host ot-jump-01 to break path P12 to the EMS data link",
+  "summary": "Validated path P12 runs from the corporate network to the energy management system data link (ems-link-01) through the IT to OT jump host (ot-jump-01). The jump host, a Microsoft Windows Server in the OT DMZ, accepts RDP from the whole corporate network with password-only sign-in. The EMS data link then trusts logons coming from that jump host. The validation agent reached the RDP logon prompt from a corporate desktop VLAN but did not attempt a logon. No CVEs are involved; this is a misconfiguration.",
+  "why_it_matters": "The jump host is the only control between ordinary corporate desktops and the EMS data link, and both assets are crown jewels. A single stolen or guessed password would be enough to reach grid operations systems. Fixing the entry point on ot-jump-01 breaks the whole path.",
+  "fix_point_asset": "ot-jump-01",
+  "fix_steps": [
+   "On ot-jump-01 (Microsoft Windows Server, IT to OT jump host), restrict inbound RDP at the host firewall and the upstream network firewall so only an approved administrator group or privileged access workstation subnet can connect, not the whole corporate network.",
+   "Enforce multi-factor authentication for all RDP sign-ins to ot-jump-01, for example through a remote desktop gateway or MFA provider, and disable password-only logon.",
+   "Limit the accounts allowed to log on through Remote Desktop to a named, reviewed group of OT administrators and remove any unused or shared accounts.",
+   "Review recent RDP logon records on ot-jump-01 for unexpected sources or accounts and escalate anything unexplained to the security team."
+  ],
+  "verify_steps": [
+   "From a standard corporate desktop VLAN, confirm the RDP service on ot-jump-01 is no longer reachable.",
+   "From an approved administrator source, confirm an RDP sign-in to ot-jump-01 requires a second factor and cannot complete with a password alone.",
+   "Request a rerun of the validation for path P12 to confirm the path is broken."
+  ],
+  "exec_line": "Any corporate computer can reach the gateway to our grid control systems with only a password; we are locking it down.",
+  "route": "human_review",
+  "route_reason": "The path ends at ems-link-01, the energy management system data link, which is marked as a crown jewel. The fix point ot-jump-01 is also a crown jewel.",
+  "guardrail_problems": [],
+  "final_route": "human_review",
+  "owner_team": "OT Engineering",
+  "_meta": {
+   "model": "claude-opus-5-5",
+   "input_tokens": 1478,
+   "output_tokens": 822,
+   "latency_s": 9.18,
+   "cost_usd": 0.02235,
+   "stop_reason": "end_turn"
+  }
+ }
+}
