@@ -159,7 +159,7 @@
      "misconfig": "Historian accepts logons from the OT jump host"
     }
    ],
-   "evidence": "Command injection on the GlobalProtect portal was confirmed; the reused local admin password opened the OT jump host, which can log on to the historian. No commands were sent to the historian.",
+   "evidence": "Command injection on the GlobalProtect portal was confirmed, and the firewall's management password matches the OT jump host's local admin password, which the historian accepts. The agent stopped at the OT boundary and did not log on to the jump host or the historian.",
    "timeline": {
     "validated": 5,
     "acknowledged": 6,
@@ -357,7 +357,7 @@
      "cve": "CVE-2020-1472"
     }
    ],
-   "evidence": "The domain controller accepted a vulnerable Netlogon secure channel from a corporate workstation; the agent stopped before changing any password.",
+   "evidence": "The domain controller runs an affected version and accepts Netlogon secure channels from corporate workstations; the agent confirmed the version only and made no change.",
    "timeline": {
     "validated": 15,
     "acknowledged": 15,
