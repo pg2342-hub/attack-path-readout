@@ -17,13 +17,13 @@
 .seg button:hover{color:var(--ink)}
 .seg button[aria-checked=true]{background:var(--ink);color:var(--paper)}
 .cap{margin:0;color:var(--ink-2);font-size:15px}
-.vline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:22px 24px 6px}
+.vline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:22px 24px 4px}
 .vline h2{all:unset;display:block;font:400 34px/1.1 var(--serif)}
 .gate{justify-self:end;display:inline-flex;align-items:center;min-height:34px;padding:0 16px;border-radius:999px;font:500 13px/1 var(--mono);letter-spacing:.06em;white-space:nowrap}
 .gate.nogo{background:var(--ink);color:var(--paper)}
 .gate.go{background:var(--green-wash);color:var(--green)}
 .gate.part{border:1.5px dashed var(--ink);color:var(--ink)}
-.memo{grid-column:1/-1;margin:6px 0 0;font-size:17px;max-width:46em}
+.memo{margin:22px 0 0;font-size:16px;max-width:46em}
 .memo small{display:block;margin-top:8px;color:var(--ink-2);font:400 12.5px/1.4 var(--mono)}
 .tally{padding:18px 24px 22px}
 .counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -152,9 +152,8 @@ button.tile.s-pending{opacity:.55}
   <div class="vline" aria-live="polite">
     <h2 id="verdict-h"></h2>
     <span class="gate" id="gate"></span>
-    <p class="memo" id="memo"></p>
   </div>
-  <div class="tally"><div class="counts" id="counts"></div></div>
+  <div class="tally"><div class="counts" id="counts"></div><p class="memo" id="memo"></p></div>
   <div class="groups" id="groups"></div>
   <div class="detail" id="pathDetail" aria-live="polite"></div>
   <div class="legend"><span><i style="background:var(--green)"></i>Closed, confirmed by a retest</span><span><i style="background:var(--ink)"></i>Open</span><span><i style="background:repeating-linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 8px)"></i>Fixed, but the retest found it still open</span><span><i style="background:var(--rule)"></i>Not validated yet</span></div>
